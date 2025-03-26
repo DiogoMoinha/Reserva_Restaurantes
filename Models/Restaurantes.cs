@@ -1,6 +1,6 @@
 ﻿namespace Reserva_Restaurantes.Models;
 
-public class Restaurante
+public class Restaurantes
 {
     /// <summary>
     /// identificador do restaurante

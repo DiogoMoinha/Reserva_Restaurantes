@@ -1,6 +1,6 @@
 ﻿namespace Reserva_Restaurantes.Models;
 
-public class Cliente
+public class Clientes
 {
     public int Id { get; set; }
     

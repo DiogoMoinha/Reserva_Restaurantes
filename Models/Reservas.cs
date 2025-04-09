@@ -2,7 +2,7 @@
 
 namespace Reserva_Restaurantes.Models;
 
-public class Reserva
+public class Reservas
 {
     /// <summary>
     /// Id da Reserva
@@ -10,9 +10,14 @@ public class Reserva
     public int Id { get; set; }
     
     /// <summary>
-    /// Horario da reserva
+    /// Data da reserva
     /// </summary>
-    public DateTime DataHora { get; set; }
+    public DateOnly Data { get; set; }
+    
+    /// <summary>
+    /// Hora da reserva
+    /// </summary>
+    public DateTime Hora { get; set; }
     
     /// <summary>
     /// Quantidade de Pessoas esperadas para a reserva
@@ -27,10 +32,4 @@ public class Reserva
     [ForeignKey(nameof(Clientes))]
     public int ClienteFK { get; set; }
     public Clientes Cliente { get; set; }
-    
-    [ForeignKey(nameof(Restaurantes))]
-    public int RestauranteFK { get; set; }
-    public Restaurantes Restaurante { get; set; }
-    
-    
 }

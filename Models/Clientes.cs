@@ -1,6 +1,6 @@
 ﻿namespace Reserva_Restaurantes.Models;
 
-public class Cliente
+public class Clientes
 {
     public int Id { get; set; }
     
@@ -9,4 +9,11 @@ public class Cliente
     public string Email { get; set; }
     
     public string Telefone { get; set; }
+    
+    /* *****************************
+     * Definição de Relacionamentos
+     * *****************************
+     */
+    
+    public ICollection<Reservas> ListaReservas { get; set; }
 }

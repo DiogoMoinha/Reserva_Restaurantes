@@ -1,6 +1,6 @@
 ﻿namespace Reserva_Restaurantes.Models;
 
-public class Restaurante
+public class Restaurantes
 {
     /// <summary>
     /// identificador do restaurante
@@ -18,12 +18,19 @@ public class Restaurante
     public string Endereco { get; set; }
     
     /// <summary>
-    /// Capacidade total de clientes do restaurante
+    /// Horario de Abertura do restaurante
     /// </summary>
-    public int Capacidade { get; set; }
+    public DateTime HoraAbertura { get; set; }
     
     /// <summary>
-    /// Horario de funcionamento do restaurante
+    /// Horario de Fecho do restaurante
     /// </summary>
-    public DateTime Horario { get; set; }
+    public DateTime HoraFecho { get; set; }
+    
+    /* *****************************
+     * Definição de Relacionamentos
+     * *****************************
+     */
+    
+    public ICollection<Reservas> ListaReservas { get; set; }
 }

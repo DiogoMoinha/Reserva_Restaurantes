@@ -1,0 +1,41 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\digas\\OneDrive\\Ambiente de Trabalho\\Diogo\\Escola\\2 ano\\Des. Web 24-25\\Reserva_Restaurantes\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{6DB3EF04-E60A-418C-9569-84AAE09AFFF6}|Reserva_Restaurantes.csproj|c:\\users\\digas\\onedrive\\ambiente de trabalho\\diogo\\escola\\2 ano\\des. web 24-25\\reserva_restaurantes\\controllers\\restaurantescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6DB3EF04-E60A-418C-9569-84AAE09AFFF6}|Reserva_Restaurantes.csproj|solutionrelative:controllers\\restaurantescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "RestaurantesController.cs",
+              "DocumentMoniker": "C:\\Users\\digas\\OneDrive\\Ambiente de Trabalho\\Diogo\\Escola\\2 ano\\Des. Web 24-25\\Reserva_Restaurantes\\Controllers\\RestaurantesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\RestaurantesController.cs",
+              "ToolTip": "C:\\Users\\digas\\OneDrive\\Ambiente de Trabalho\\Diogo\\Escola\\2 ano\\Des. Web 24-25\\Reserva_Restaurantes\\Controllers\\RestaurantesController.cs",
+              "RelativeToolTip": "Controllers\\RestaurantesController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T08:47:35.86Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

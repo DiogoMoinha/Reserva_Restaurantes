@@ -97,8 +97,20 @@ namespace Reserva_Restaurantes.Controllers
             {
                 try
                 {
+                    // vou buscar o id do utilizador da sessão
+                    var utilizadorDaSessao = HttpContext.Session.GetInt32("clienteId");
+                    // se o id do utilizador da sessão for diferente do que recebemos
+                    // quer dizer que está a tentar alterar um utilizador diferente do que tem no ecrã
+                    if (utilizadorDaSessao != id)
+                    {
+                        ModelState.AddModelError("", "Tentaste aldrabar isto palhaço! Outra vez!!!");
+                        return View(clientes);
+                    }
+                    
                     _context.Update(clientes);
                     await _context.SaveChangesAsync();
+                    // colocamos o utilizadorId da sessão a 0, para ele não poder fazer POSTs sucessivos 
+                    HttpContext.Session.SetInt32("clienteId", 0);
                 }
                 catch (DbUpdateConcurrencyException)
                 {

@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <Nullable>enable</Nullable>
+        <Nullable>disable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>aspnet-Reserva_Restaurantes-616fe697-91e2-42d9-9be5-4dbdfcb1fe4f</UserSecretsId>
     </PropertyGroup>

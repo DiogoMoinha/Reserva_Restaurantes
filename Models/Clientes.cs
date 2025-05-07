@@ -18,6 +18,7 @@ public class Clientes
     /// <summary>
     /// Email do Cliente
     /// </summary>
+    [RegularExpression("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,}", ErrorMessage = "O {0} não tem o formato certo.")] 
     [Required(ErrorMessage = "O {0} é de preenchimento obrigatório.")] 
     public string Email { get; set; }
     
@@ -34,5 +35,5 @@ public class Clientes
      * *****************************
      */
     
-    public ICollection<Reservas> ListaReservas { get; set; }
+    public ICollection<Reservas>? ListaReservas { get; set; }
 }

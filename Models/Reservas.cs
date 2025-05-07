@@ -12,7 +12,7 @@ public class Reservas
     /// <summary>
     /// Data da reserva
     /// </summary>
-    public DateOnly Data { get; set; }
+    public DateTime Data { get; set; }
     
     /// <summary>
     /// Hora da reserva

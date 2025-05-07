@@ -34,5 +34,5 @@ public class Clientes
      * *****************************
      */
     
-    public ICollection<Reservas> ListaReservas { get; set; }
+    public ICollection<Reservas>? ListaReservas { get; set; }
 }

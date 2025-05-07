@@ -32,5 +32,5 @@ public class Restaurantes
      * *****************************
      */
     
-    public ICollection<Reservas> ListaReservas { get; set; }
+    public ICollection<Reservas>? ListaReservas { get; set; }
 }

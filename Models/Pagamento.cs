@@ -4,8 +4,10 @@ namespace Reserva_Restaurantes.Models;
 
 public class Pagamento
 {
+    /// <summary>
+    /// id do pagamento
+    /// </summary>
     public int id { get; set; }
-    
     
     /// <summary>
     /// metodo de pagamento
@@ -15,7 +17,17 @@ public class Pagamento
     /// <summary>
     /// estado do pagamento
     /// </summary>
-    public string estado { get; set; }
+    public Estados estado { get; set; }
+
+    /// <summary>
+    /// Estados associados a um pagamento
+    /// </summary>
+    public enum Estados
+    {
+        Pendiente,
+        Pago,
+        Cancelado
+    }
     
     /* *****************************
      * Definição de Relacionamentos

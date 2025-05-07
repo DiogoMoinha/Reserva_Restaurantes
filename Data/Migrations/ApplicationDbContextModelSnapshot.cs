@@ -236,6 +236,58 @@ namespace Reserva_Restaurantes.Data.Migrations
                     b.ToTable("Clientes");
                 });
 
+            modelBuilder.Entity("Reserva_Restaurantes.Models.Mesas", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Capacidade")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("NumMesa")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("RestauranteFK")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("RestauranteId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RestauranteId");
+
+                    b.ToTable("Mesas");
+                });
+
+            modelBuilder.Entity("Reserva_Restaurantes.Models.Pagamento", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ReservaId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ReservasFK")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("estado")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("metodo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("ReservaId");
+
+                    b.ToTable("Pagamento");
+                });
+
             modelBuilder.Entity("Reserva_Restaurantes.Models.Reservas", b =>
                 {
                     b.Property<int>("Id")
@@ -343,6 +395,28 @@ namespace Reserva_Restaurantes.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Reserva_Restaurantes.Models.Mesas", b =>
+                {
+                    b.HasOne("Reserva_Restaurantes.Models.Restaurantes", "Restaurante")
+                        .WithMany()
+                        .HasForeignKey("RestauranteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Restaurante");
+                });
+
+            modelBuilder.Entity("Reserva_Restaurantes.Models.Pagamento", b =>
+                {
+                    b.HasOne("Reserva_Restaurantes.Models.Reservas", "Reserva")
+                        .WithMany()
+                        .HasForeignKey("ReservaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Reserva");
                 });
 
             modelBuilder.Entity("Reserva_Restaurantes.Models.Reservas", b =>

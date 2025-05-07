@@ -273,9 +273,8 @@ namespace Reserva_Restaurantes.Data.Migrations
                     b.Property<int>("ReservasFK")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("estado")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("estado")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("metodo")
                         .IsRequired()

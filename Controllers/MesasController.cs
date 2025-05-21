@@ -66,6 +66,7 @@ namespace Reserva_Restaurantes.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Id", mesas.RestauranteFK);
             return View(mesas);
         }
 
@@ -82,6 +83,7 @@ namespace Reserva_Restaurantes.Controllers
             {
                 return NotFound();
             }
+            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Nome");
             return View(mesas);
         }
 
@@ -117,6 +119,7 @@ namespace Reserva_Restaurantes.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Id", mesas.RestauranteFK);
             return View(mesas);
         }
 
@@ -135,7 +138,7 @@ namespace Reserva_Restaurantes.Controllers
             {
                 return NotFound();
             }
-
+            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Nome");
             return View(mesas);
         }
 

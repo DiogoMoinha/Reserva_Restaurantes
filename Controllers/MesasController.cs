@@ -22,7 +22,9 @@ namespace Reserva_Restaurantes.Controllers
         // GET: Mesas
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Mesas.ToListAsync());
+            var applicationDbContext =
+                _context.Mesas.Include(m => m.Restaurante);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Mesas/Details/5
@@ -34,6 +36,7 @@ namespace Reserva_Restaurantes.Controllers
             }
 
             var mesas = await _context.Mesas
+                .Include(m => m.Restaurante)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (mesas == null)
             {
@@ -46,6 +49,7 @@ namespace Reserva_Restaurantes.Controllers
         // GET: Mesas/Create
         public IActionResult Create()
         {
+            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Nome");
             return View();
         }
 
@@ -125,6 +129,7 @@ namespace Reserva_Restaurantes.Controllers
             }
 
             var mesas = await _context.Mesas
+                .Include(m => m.Restaurante)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (mesas == null)
             {

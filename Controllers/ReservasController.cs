@@ -22,7 +22,9 @@ namespace Reserva_Restaurantes.Controllers
         // GET: Reservas
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Reservas.Include(r => r.Restaurantes);
+            var applicationDbContext = 
+                _context.Reservas.Include(r => r.Restaurante)
+                    .Include(r=>r.Cliente);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -35,7 +37,8 @@ namespace Reserva_Restaurantes.Controllers
             }
 
             var reservas = await _context.Reservas
-                .Include(r => r.Restaurantes)
+                .Include(r => r.Restaurante)
+                .Include(r => r.Cliente)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (reservas == null)
             {
@@ -48,7 +51,8 @@ namespace Reserva_Restaurantes.Controllers
         // GET: Reservas/Create
         public IActionResult Create()
         {
-            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Id");
+            ViewData["ClienteFK"] = new SelectList(_context.Clientes, "Id", "Nome");
+            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Nome");
             return View();
         }
 
@@ -131,7 +135,8 @@ namespace Reserva_Restaurantes.Controllers
             }
 
             var reservas = await _context.Reservas
-                .Include(r => r.Restaurantes)
+                .Include(r => r.Restaurante)
+                .Include(r=>r.Cliente)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (reservas == null)
             {

@@ -24,7 +24,7 @@ public class Mesas
      * *****************************
      */
     
-    [ForeignKey(nameof(Restaurantes))]
+    [ForeignKey(nameof(Restaurante))]
     public int RestauranteFK { get; set; }
     public Restaurantes Restaurante { get; set; }
 }

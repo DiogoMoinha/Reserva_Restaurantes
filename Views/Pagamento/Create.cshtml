@@ -24,8 +24,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="ReservasFK" class="control-label"></label>
-                <input asp-for="ReservasFK" class="form-control" />
-                <span asp-validation-for="ReservasFK" class="text-danger"></span>
+                <select asp-for="ReservasFK" class ="form-control" asp-items="ViewBag.ReservasFK"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

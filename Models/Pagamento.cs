@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Reserva_Restaurantes.Models;
 
@@ -33,7 +34,7 @@ public class Pagamento
      * Definição de Relacionamentos
      * *****************************
      */
-    
+    [Display(Name = "Reserva")]
     [ForeignKey(nameof(Reserva))]
     public int ReservasFK { get; set; }
     public Reservas Reserva { get; set; }

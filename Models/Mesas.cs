@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Reserva_Restaurantes.Models;
 
@@ -23,7 +24,7 @@ public class Mesas
      * Definição de Relacionamentos
      * *****************************
      */
-    
+    [Display(Name = "Restaurante")]
     [ForeignKey(nameof(Restaurante))]
     public int RestauranteFK { get; set; }
     public Restaurantes Restaurante { get; set; }

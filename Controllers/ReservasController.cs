@@ -10,22 +10,23 @@ using Reserva_Restaurantes.Models;
 
 namespace Reserva_Restaurantes.Controllers
 {
-    public class ReservaController : Controller
+    public class ReservasController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ReservaController(ApplicationDbContext context)
+        public ReservasController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Reserva
+        // GET: Reservas
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Reservas.ToListAsync());
+            var applicationDbContext = _context.Reservas.Include(r => r.Restaurantes);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Reserva/Details/5
+        // GET: Reservas/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,6 +35,7 @@ namespace Reserva_Restaurantes.Controllers
             }
 
             var reservas = await _context.Reservas
+                .Include(r => r.Restaurantes)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (reservas == null)
             {
@@ -43,18 +45,19 @@ namespace Reserva_Restaurantes.Controllers
             return View(reservas);
         }
 
-        // GET: Reserva/Create
+        // GET: Reservas/Create
         public IActionResult Create()
         {
+            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Id");
             return View();
         }
 
-        // POST: Reserva/Create
+        // POST: Reservas/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Data,Hora,PessoasQtd,ClienteFK")] Reservas reservas)
+        public async Task<IActionResult> Create([Bind("Id,Data,Hora,PessoasQtd,ClienteFK,RestauranteFK")] Reservas reservas)
         {
             if (ModelState.IsValid)
             {
@@ -62,10 +65,11 @@ namespace Reserva_Restaurantes.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Id", reservas.RestauranteFK);
             return View(reservas);
         }
 
-        // GET: Reserva/Edit/5
+        // GET: Reservas/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -78,15 +82,16 @@ namespace Reserva_Restaurantes.Controllers
             {
                 return NotFound();
             }
+            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Id", reservas.RestauranteFK);
             return View(reservas);
         }
 
-        // POST: Reserva/Edit/5
+        // POST: Reservas/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Data,Hora,PessoasQtd,ClienteFK")] Reservas reservas)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Data,Hora,PessoasQtd,ClienteFK,RestauranteFK")] Reservas reservas)
         {
             if (id != reservas.Id)
             {
@@ -113,10 +118,11 @@ namespace Reserva_Restaurantes.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Id", reservas.RestauranteFK);
             return View(reservas);
         }
 
-        // GET: Reserva/Delete/5
+        // GET: Reservas/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -125,6 +131,7 @@ namespace Reserva_Restaurantes.Controllers
             }
 
             var reservas = await _context.Reservas
+                .Include(r => r.Restaurantes)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (reservas == null)
             {
@@ -134,7 +141,7 @@ namespace Reserva_Restaurantes.Controllers
             return View(reservas);
         }
 
-        // POST: Reserva/Delete/5
+        // POST: Reservas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <Nullable>enable</Nullable>
+        <Nullable>disable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>aspnet-Reserva_Restaurantes-616fe697-91e2-42d9-9be5-4dbdfcb1fe4f</UserSecretsId>
     </PropertyGroup>
@@ -12,16 +12,21 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.4" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.4" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.15" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.15" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.15" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.15" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.15" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.15"/>
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Reserva\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Reserva\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Reserva\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Reserva\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Reserva\Index.cshtml" />
     </ItemGroup>
 
 </Project>

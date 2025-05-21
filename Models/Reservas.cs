@@ -32,4 +32,8 @@ public class Reservas
     [ForeignKey(nameof(Clientes))]
     public int ClienteFK { get; set; }
     public Clientes Cliente { get; set; }
+    
+    [ForeignKey(nameof(Restaurantes))]
+    public int RestauranteFK { get; set; }
+    public Restaurantes Restaurantes { get; set; }
 }

@@ -37,10 +37,28 @@
                 @Html.DisplayFor(modelItem => item.Endereco)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.HoraAbertura)
+                @{
+                    if (item.HoraAbertura.Minute < 10)
+                    {
+                        <p>@item.HoraAbertura.Hour:0@(item.HoraAbertura.Minute)</p>
+                    }
+                    else
+                    {
+                        <p>@item.HoraAbertura.Hour:@(item.HoraAbertura.Minute)</p>
+                    }
+                }
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.HoraFecho)
+                @{
+                    if (item.HoraFecho.Minute < 10)
+                    {
+                        <p>@item.HoraFecho.Hour:0@(item.HoraFecho.Minute)</p>
+                    }
+                    else
+                    {
+                        <p>@item.HoraFecho.Hour:@(item.HoraFecho.Minute)</p>
+                    }
+                }
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |

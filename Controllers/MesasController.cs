@@ -26,7 +26,7 @@ namespace Reserva_Restaurantes.Controllers
                 _context.Mesas.Include(m => m.Restaurante);
             return View(await applicationDbContext.ToListAsync());
         }
-
+//aaaa
         // GET: Mesas/Details/5
         public async Task<IActionResult> Details(int? id)
         {

@@ -14,13 +14,22 @@
             @Html.DisplayNameFor(model => model.Data)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Data)
+            @(Model.Data.Day + "/" + Model.Data.Month + "/" +Model.Data.Year)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Hora)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Hora)
+            @{
+                if (Model.Hora.Minute < 10)
+                {
+                    <p>@Model.Hora.Hour:0@(Model.Hora.Minute)</p>
+                }
+                else
+                {
+                    <p>@Model.Hora.Hour:@(Model.Hora.Minute)</p>
+                }
+            }
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.PessoasQtd)

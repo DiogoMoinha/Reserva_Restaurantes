@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Reserva_Restaurantes.Models;
 
@@ -12,11 +13,13 @@ public class Mesas
     /// <summary>
     /// Numero da Mesa
     /// </summary>
+    [Range(1, int.MaxValue, ErrorMessage = "O número da mesa deve ser positivo.")]
     public int NumMesa { get; set; }
     
     /// <summary>
     /// Capacidade da mesa
     /// </summary>
+    [Range(1, int.MaxValue, ErrorMessage = "O número da mesa deve ser positivo.")]
     public int Capacidade { get; set; }
     
     /* *****************************

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Reserva_Restaurantes.Models;
 
@@ -22,6 +23,7 @@ public class Reservas
     /// <summary>
     /// Quantidade de Pessoas esperadas para a reserva
     /// </summary>
+    [Range(1, int.MaxValue, ErrorMessage = "O número da mesa deve ser positivo.")]
     public int PessoasQtd { get; set; }
     
     /* *****************************
@@ -35,7 +37,7 @@ public class Reservas
     
     [ForeignKey(nameof(Restaurante))]
 
-    public int RestaurantesFK { get; set; }
+    public int RestauranteFK { get; set; }
 
     public Restaurantes Restaurante { get; set; }
 }

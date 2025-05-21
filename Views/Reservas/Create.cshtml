@@ -1,0 +1,50 @@
+@model Reserva_Restaurantes.Models.Reservas
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Reservas</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Data" class="control-label"></label>
+                <input asp-for="Data" class="form-control" />
+                <span asp-validation-for="Data" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Hora" class="control-label"></label>
+                <input asp-for="Hora" class="form-control" />
+                <span asp-validation-for="Hora" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PessoasQtd" class="control-label"></label>
+                <input asp-for="PessoasQtd" class="form-control" />
+                <span asp-validation-for="PessoasQtd" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClienteFK" class="control-label"></label>
+                <input asp-for="ClienteFK" class="form-control" />
+                <span asp-validation-for="ClienteFK" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RestaurantesFK" class="control-label"></label>
+                <input asp-for="RestaurantesFK" class="form-control" />
+                <span asp-validation-for="RestaurantesFK" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

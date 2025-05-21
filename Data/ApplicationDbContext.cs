@@ -11,13 +11,13 @@ public class ApplicationDbContext : IdentityDbContext
     {
     }
 
-public DbSet<Reserva_Restaurantes.Models.Restaurantes> Restaurantes { get; set; } = default!;
+public DbSet<Restaurantes> Restaurantes { get; set; } = default!;
 
-public DbSet<Reserva_Restaurantes.Models.Mesas> Mesas { get; set; } = default!;
+public DbSet<Mesas> Mesas { get; set; } = default!;
 
-public DbSet<Reserva_Restaurantes.Models.Reservas> Reservas { get; set; } = default!;
+public DbSet<Reservas> Reservas { get; set; } = default!;
 
-public DbSet<Reserva_Restaurantes.Models.Clientes> Clientes { get; set; } = default!;
+public DbSet<Clientes> Clientes { get; set; } = default!;
 
-public DbSet<Reserva_Restaurantes.Models.Pagamento> Pagamento { get; set; } = default!;
+public DbSet<Pagamento> Pagamento { get; set; } = default!;
 }

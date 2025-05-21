@@ -24,7 +24,7 @@ public class Pagamento
     /// </summary>
     public enum Estados
     {
-        Pendiente,
+        Pendente,
         Pago,
         Cancelado
     }
@@ -34,7 +34,7 @@ public class Pagamento
      * *****************************
      */
     
-    [ForeignKey(nameof(Reservas))]
+    [ForeignKey(nameof(Reserva))]
     public int ReservasFK { get; set; }
     public Reservas Reserva { get; set; }
 }

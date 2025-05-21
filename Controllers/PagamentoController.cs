@@ -22,7 +22,9 @@ namespace Reserva_Restaurantes.Controllers
         // GET: Pagamento
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Pagamento.ToListAsync());
+            var applicationDbContext =
+                _context.Pagamento.Include(p => p.Reserva);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Pagamento/Details/5
@@ -34,6 +36,7 @@ namespace Reserva_Restaurantes.Controllers
             }
 
             var pagamento = await _context.Pagamento
+                .Include(p => p.Reserva)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (pagamento == null)
             {
@@ -46,6 +49,7 @@ namespace Reserva_Restaurantes.Controllers
         // GET: Pagamento/Create
         public IActionResult Create()
         {
+            ViewData["ReservasFK"] = new SelectList(_context.Reservas, "Id", "Id");
             return View();
         }
 
@@ -54,7 +58,7 @@ namespace Reserva_Restaurantes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,metodo,estado,ReservasFK")] Pagamento pagamento)
+        public async Task<IActionResult> Create([Bind("Id,metodo,estado,ReservasFK")] Pagamento pagamento)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +90,7 @@ namespace Reserva_Restaurantes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,metodo,estado,ReservasFK")] Pagamento pagamento)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,metodo,estado,ReservasFK")] Pagamento pagamento)
         {
             if (id != pagamento.id)
             {
@@ -125,6 +129,7 @@ namespace Reserva_Restaurantes.Controllers
             }
 
             var pagamento = await _context.Pagamento
+                .Include(p => p.Reserva)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (pagamento == null)
             {

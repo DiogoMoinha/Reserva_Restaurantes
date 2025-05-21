@@ -251,7 +251,7 @@ namespace Reserva_Restaurantes.Data.Migrations
                     b.Property<int>("RestauranteFK")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("RestauranteId")
+                    b.Property<int?>("RestauranteId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -267,7 +267,7 @@ namespace Reserva_Restaurantes.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ReservaId")
+                    b.Property<int?>("ReservaId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("ReservasFK")
@@ -277,7 +277,6 @@ namespace Reserva_Restaurantes.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("metodo")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("id");
@@ -296,7 +295,7 @@ namespace Reserva_Restaurantes.Data.Migrations
                     b.Property<int>("ClienteFK")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ClienteId")
+                    b.Property<int?>("ClienteId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateOnly>("Data")
@@ -308,14 +307,17 @@ namespace Reserva_Restaurantes.Data.Migrations
                     b.Property<int>("PessoasQtd")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("RestaurantesId")
+                    b.Property<int?>("RestauranteId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("RestaurantesFK")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ClienteId");
 
-                    b.HasIndex("RestaurantesId");
+                    b.HasIndex("RestauranteId");
 
                     b.ToTable("Reservas");
                 });
@@ -327,7 +329,6 @@ namespace Reserva_Restaurantes.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Endereco")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("HoraAbertura")
@@ -337,7 +338,6 @@ namespace Reserva_Restaurantes.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -400,9 +400,7 @@ namespace Reserva_Restaurantes.Data.Migrations
                 {
                     b.HasOne("Reserva_Restaurantes.Models.Restaurantes", "Restaurante")
                         .WithMany()
-                        .HasForeignKey("RestauranteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RestauranteId");
 
                     b.Navigation("Restaurante");
                 });
@@ -411,9 +409,7 @@ namespace Reserva_Restaurantes.Data.Migrations
                 {
                     b.HasOne("Reserva_Restaurantes.Models.Reservas", "Reserva")
                         .WithMany()
-                        .HasForeignKey("ReservaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ReservaId");
 
                     b.Navigation("Reserva");
                 });
@@ -422,15 +418,15 @@ namespace Reserva_Restaurantes.Data.Migrations
                 {
                     b.HasOne("Reserva_Restaurantes.Models.Clientes", "Cliente")
                         .WithMany("ListaReservas")
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ClienteId");
 
-                    b.HasOne("Reserva_Restaurantes.Models.Restaurantes", null)
+                    b.HasOne("Reserva_Restaurantes.Models.Restaurantes", "Restaurante")
                         .WithMany("ListaReservas")
-                        .HasForeignKey("RestaurantesId");
+                        .HasForeignKey("RestauranteId");
 
                     b.Navigation("Cliente");
+
+                    b.Navigation("Restaurante");
                 });
 
             modelBuilder.Entity("Reserva_Restaurantes.Models.Clientes", b =>

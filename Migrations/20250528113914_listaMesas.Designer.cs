@@ -12,8 +12,8 @@ using Reserva_Restaurantes.Data;
 namespace Reserva_Restaurantes.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250521114426_fotos")]
-    partial class fotos
+    [Migration("20250528113914_listaMesas")]
+    partial class listaMesas
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -414,7 +414,7 @@ namespace Reserva_Restaurantes.Migrations
             modelBuilder.Entity("Reserva_Restaurantes.Models.Mesas", b =>
                 {
                     b.HasOne("Reserva_Restaurantes.Models.Restaurantes", "Restaurante")
-                        .WithMany()
+                        .WithMany("ListaMesas")
                         .HasForeignKey("RestauranteFK")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -459,6 +459,8 @@ namespace Reserva_Restaurantes.Migrations
 
             modelBuilder.Entity("Reserva_Restaurantes.Models.Restaurantes", b =>
                 {
+                    b.Navigation("ListaMesas");
+
                     b.Navigation("ListaReservas");
                 });
 #pragma warning restore 612, 618

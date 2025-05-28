@@ -1,7 +1,24 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Bem-vindo ao R&R";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Bem Vindo</h1>
+<div class="container mt-5">
+    <div class="text-center">
+        <h1 class="display-4">Bem-vindo ao ReservaRestaurantes</h1>
+        <p class="lead">Encontre e reserve mesas nos melhores restaurantes da cidade.</p>
+        <a class="btn btn-primary btn-lg mt-3" href="/Reservas/Create">Reservar Agora</a>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <h3>Restaurantes</h3>
+            <p>Explore a nossa lista de restaurantes parceiros.</p>
+            <a class="btn btn-outline-secondary" href="/Restaurantes">Ver Restaurantes</a>
+        </div>
+        <div class="col-md-4">
+            <h3>Suas Reservas</h3>
+            <p>Veja as suas reservas.</p>
+            <a class="btn btn-outline-secondary" href="/Clientes">Ver as suas Reservas</a>
+        </div>
+    </div>
 </div>

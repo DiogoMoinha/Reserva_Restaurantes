@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Reserva_Restaurantes.Migrations
 {
     /// <inheritdoc />
-    public partial class dbatata : Migration
+    public partial class fotos : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -74,7 +74,8 @@ namespace Reserva_Restaurantes.Migrations
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Endereco = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HoraAbertura = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    HoraFecho = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    HoraFecho = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Foto = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -195,17 +196,17 @@ namespace Reserva_Restaurantes.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NumMesa = table.Column<int>(type: "int", nullable: false),
                     Capacidade = table.Column<int>(type: "int", nullable: false),
-                    RestauranteFK = table.Column<int>(type: "int", nullable: false),
-                    RestauranteId = table.Column<int>(type: "int", nullable: true)
+                    RestauranteFK = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Mesas", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Mesas_Restaurantes_RestauranteId",
-                        column: x => x.RestauranteId,
+                        name: "FK_Mesas_Restaurantes_RestauranteFK",
+                        column: x => x.RestauranteFK,
                         principalTable: "Restaurantes",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -218,22 +219,23 @@ namespace Reserva_Restaurantes.Migrations
                     Hora = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PessoasQtd = table.Column<int>(type: "int", nullable: false),
                     ClienteFK = table.Column<int>(type: "int", nullable: false),
-                    ClienteId = table.Column<int>(type: "int", nullable: true),
-                    RestaurantesId = table.Column<int>(type: "int", nullable: true)
+                    RestauranteFK = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reservas", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reservas_Clientes_ClienteId",
-                        column: x => x.ClienteId,
+                        name: "FK_Reservas_Clientes_ClienteFK",
+                        column: x => x.ClienteFK,
                         principalTable: "Clientes",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Reservas_Restaurantes_RestaurantesId",
-                        column: x => x.RestaurantesId,
+                        name: "FK_Reservas_Restaurantes_RestauranteFK",
+                        column: x => x.RestauranteFK,
                         principalTable: "Restaurantes",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -244,17 +246,17 @@ namespace Reserva_Restaurantes.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     metodo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     estado = table.Column<int>(type: "int", nullable: false),
-                    ReservasFK = table.Column<int>(type: "int", nullable: false),
-                    ReservaId = table.Column<int>(type: "int", nullable: true)
+                    ReservasFK = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Pagamento", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Pagamento_Reservas_ReservaId",
-                        column: x => x.ReservaId,
+                        name: "FK_Pagamento_Reservas_ReservasFK",
+                        column: x => x.ReservasFK,
                         principalTable: "Reservas",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -297,24 +299,24 @@ namespace Reserva_Restaurantes.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Mesas_RestauranteId",
+                name: "IX_Mesas_RestauranteFK",
                 table: "Mesas",
-                column: "RestauranteId");
+                column: "RestauranteFK");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pagamento_ReservaId",
+                name: "IX_Pagamento_ReservasFK",
                 table: "Pagamento",
-                column: "ReservaId");
+                column: "ReservasFK");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservas_ClienteId",
+                name: "IX_Reservas_ClienteFK",
                 table: "Reservas",
-                column: "ClienteId");
+                column: "ClienteFK");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservas_RestaurantesId",
+                name: "IX_Reservas_RestauranteFK",
                 table: "Reservas",
-                column: "RestaurantesId");
+                column: "RestauranteFK");
         }
 
         /// <inheritdoc />

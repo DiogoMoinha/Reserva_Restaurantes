@@ -24,6 +24,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.HoraFecho)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Foto)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -59,6 +62,13 @@
                         <p>@item.HoraFecho.Hour:@(item.HoraFecho.Minute)</p>
                     }
                 }
+            </td>
+            <td>
+                @*         @Html.DisplayFor(modelItem => item.Ficheiro)   *@
+                <img src="~/imagens/@item.Foto"
+                     alt="imagem do restaurante com o Nome '@item.Nome'."
+                     title="@item.Nome"
+                     height="100px" />
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |

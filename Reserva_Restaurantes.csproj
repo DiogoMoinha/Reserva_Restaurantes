@@ -29,4 +29,9 @@
       <_ContentIncludedByDefault Remove="Views\Reserva\Index.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Migrations\" />
+      <Folder Include="wwwroot\imagens\" />
+    </ItemGroup>
+
 </Project>

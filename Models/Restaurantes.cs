@@ -43,4 +43,7 @@ public class Restaurantes
      */
     
     public ICollection<Reservas> ListaReservas { get; set; }
+    
+    
+    public ICollection<Mesas> ListaMesas { get; set; }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Reserva_Restaurantes.Migrations
 {
     /// <inheritdoc />
-    public partial class fotos : Migration
+    public partial class listaMesas : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

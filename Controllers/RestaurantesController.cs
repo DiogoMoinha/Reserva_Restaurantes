@@ -62,11 +62,19 @@ namespace Reserva_Restaurantes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome,Endereco,HoraAbertura,HoraFecho,Foto")] Restaurantes restaurantes, IFormFile imagemFoto)
+        public async Task<IActionResult> Create([Bind("Id,Nome,Endereco,CodPostal,HoraAbertura,HoraFecho,Foto")] Restaurantes restaurantes, IFormFile imagemFoto)
         {
             // vars. auxiliar
             bool haErro = false;
             string nomeImagem = "";
+            
+            // Verificar se já existe restaurante com o mesmo nome
+            bool existeNome = await _context.Restaurantes.AnyAsync(r => r.Nome == restaurantes.Nome);
+            if (existeNome)
+            {
+                ModelState.AddModelError("Nome", "Já existe um restaurante com este nome.");
+                haErro = true;
+            }
             
             if (imagemFoto == null) {
                 // não há ficheiro
@@ -153,35 +161,85 @@ namespace Reserva_Restaurantes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Endereco,HoraAbertura,HoraFecho,Foto")] Restaurantes restaurantes,IFormFile imagemFoto)
+public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Endereco,CodPostal,HoraAbertura,HoraFecho,Foto")] Restaurantes restaurantes, IFormFile imagemFoto)
+{
+    if (id != restaurantes.Id)
+    {
+        return NotFound();
+    }
+    
+    // Carregar a entidade original para manter Foto se necessário
+    var restauranteOriginal = await _context.Restaurantes.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id);
+    if (restauranteOriginal == null)
+    {
+        return NotFound();
+    }
+    
+    bool existeNome = await _context.Restaurantes
+        .AnyAsync(r => r.Nome == restaurantes.Nome && r.Id != restaurantes.Id);
+    if (existeNome)
+    {
+        ModelState.AddModelError("Nome", "Já existe um restaurante com este nome.");
+        return View(restaurantes);
+    }
+
+    // Se não foi enviada nova imagem, manter a antiga
+    if (imagemFoto == null)
+    {
+        restaurantes.Foto = restauranteOriginal.Foto;
+    }
+    else
+    {
+        // Validar o ficheiro da imagem
+        if (imagemFoto.ContentType != "image/jpeg" && imagemFoto.ContentType != "image/png")
         {
-            if (id != restaurantes.Id)
+            ModelState.AddModelError("", "A fotografia deve ser jpeg ou png.");
+            return View(restaurantes);
+        }
+
+        // Processar a imagem nova
+        string nomeImagem = Guid.NewGuid().ToString();
+        string extensao = Path.GetExtension(imagemFoto.FileName).ToLowerInvariant();
+        nomeImagem += extensao;
+
+        restaurantes.Foto = nomeImagem;
+
+        // Guardar o ficheiro no disco
+        string localizacaoImagem = Path.Combine(_webHostEnvironment.WebRootPath, "imagens");
+        if (!Directory.Exists(localizacaoImagem))
+        {
+            Directory.CreateDirectory(localizacaoImagem);
+        }
+
+        string caminhoCompleto = Path.Combine(localizacaoImagem, nomeImagem);
+        using var stream = new FileStream(caminhoCompleto, FileMode.Create);
+        await imagemFoto.CopyToAsync(stream);
+    }
+
+    if (ModelState.IsValid)
+    {
+        try
+        {
+            _context.Update(restaurantes);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!RestaurantesExists(restaurantes.Id))
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            else
             {
-                try
-                {
-                    _context.Update(restaurantes);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RestaurantesExists(restaurantes.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                throw;
             }
-            return View(restaurantes);
         }
+    }
+
+    return View(restaurantes);
+}
+
 
         // GET: Restaurantes/Delete/5
         public async Task<IActionResult> Delete(int? id)

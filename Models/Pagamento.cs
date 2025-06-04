@@ -8,17 +8,25 @@ public class Pagamento
     /// <summary>
     /// id do pagamento
     /// </summary>
-    public int id { get; set; }
+    public int Id { get; set; }
     
     /// <summary>
-    /// metodo de pagamento
+    /// Método de pagamento
     /// </summary>
-    public string metodo { get; set; }
+    [Required(ErrorMessage = "O método de pagamento é obrigatório.")]
+    public MetodoPagamento Metodo { get; set; }
+    
+    public enum MetodoPagamento
+    {
+        Multibanco,
+        MBWay,
+        Cartao
+    }
     
     /// <summary>
     /// estado do pagamento
     /// </summary>
-    public Estados estado { get; set; }
+    public Estados Estado { get; set; }
 
     /// <summary>
     /// Estados associados a um pagamento
@@ -36,6 +44,7 @@ public class Pagamento
      */
     [Display(Name = "Reserva")]
     [ForeignKey(nameof(Reserva))]
+    [Required(ErrorMessage = "É necessário associar uma reserva.")]
     public int ReservasFK { get; set; }
     public Reservas Reserva { get; set; }
 }

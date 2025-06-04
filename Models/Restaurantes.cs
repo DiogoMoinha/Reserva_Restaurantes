@@ -1,4 +1,6 @@
-﻿namespace Reserva_Restaurantes.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Reserva_Restaurantes.Models;
 
 public class Restaurantes
 {
@@ -27,10 +29,21 @@ public class Restaurantes
     /// </summary>
     public DateTime HoraFecho { get; set; }
     
+    
+    /// <summary>
+    /// Nome do ficheiro da fotografia no disco rígido
+    /// do Restaurante
+    /// </summary>
+    [Display(Name = "Fotografia")]
+    public string? Foto { get; set; }
+    
     /* *****************************
      * Definição de Relacionamentos
      * *****************************
      */
     
     public ICollection<Reservas> ListaReservas { get; set; }
+    
+    
+    public ICollection<Mesas> ListaMesas { get; set; }
 }

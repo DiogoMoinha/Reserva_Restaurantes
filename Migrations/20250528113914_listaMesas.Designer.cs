@@ -12,8 +12,8 @@ using Reserva_Restaurantes.Data;
 namespace Reserva_Restaurantes.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250521081759_test")]
-    partial class test
+    [Migration("20250528113914_listaMesas")]
+    partial class listaMesas
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -269,12 +269,9 @@ namespace Reserva_Restaurantes.Migrations
                     b.Property<int>("RestauranteFK")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RestauranteId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("RestauranteId");
+                    b.HasIndex("RestauranteFK");
 
                     b.ToTable("Mesas");
                 });
@@ -287,9 +284,6 @@ namespace Reserva_Restaurantes.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<int?>("ReservaId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ReservasFK")
                         .HasColumnType("int");
 
@@ -301,7 +295,7 @@ namespace Reserva_Restaurantes.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("ReservaId");
+                    b.HasIndex("ReservasFK");
 
                     b.ToTable("Pagamento");
                 });
@@ -315,9 +309,6 @@ namespace Reserva_Restaurantes.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClienteFK")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ClienteId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Data")
@@ -334,7 +325,7 @@ namespace Reserva_Restaurantes.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClienteId");
+                    b.HasIndex("ClienteFK");
 
                     b.HasIndex("RestauranteFK");
 
@@ -350,6 +341,9 @@ namespace Reserva_Restaurantes.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Endereco")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Foto")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("HoraAbertura")
@@ -420,8 +414,10 @@ namespace Reserva_Restaurantes.Migrations
             modelBuilder.Entity("Reserva_Restaurantes.Models.Mesas", b =>
                 {
                     b.HasOne("Reserva_Restaurantes.Models.Restaurantes", "Restaurante")
-                        .WithMany()
-                        .HasForeignKey("RestauranteId");
+                        .WithMany("ListaMesas")
+                        .HasForeignKey("RestauranteFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Restaurante");
                 });
@@ -430,7 +426,9 @@ namespace Reserva_Restaurantes.Migrations
                 {
                     b.HasOne("Reserva_Restaurantes.Models.Reservas", "Reserva")
                         .WithMany()
-                        .HasForeignKey("ReservaId");
+                        .HasForeignKey("ReservasFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Reserva");
                 });
@@ -439,9 +437,11 @@ namespace Reserva_Restaurantes.Migrations
                 {
                     b.HasOne("Reserva_Restaurantes.Models.Clientes", "Cliente")
                         .WithMany("ListaReservas")
-                        .HasForeignKey("ClienteId");
+                        .HasForeignKey("ClienteFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Reserva_Restaurantes.Models.Restaurantes", "Restaurantes")
+                    b.HasOne("Reserva_Restaurantes.Models.Restaurantes", "Restaurante")
                         .WithMany("ListaReservas")
                         .HasForeignKey("RestauranteFK")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -449,7 +449,7 @@ namespace Reserva_Restaurantes.Migrations
 
                     b.Navigation("Cliente");
 
-                    b.Navigation("Restaurantes");
+                    b.Navigation("Restaurante");
                 });
 
             modelBuilder.Entity("Reserva_Restaurantes.Models.Clientes", b =>
@@ -459,6 +459,8 @@ namespace Reserva_Restaurantes.Migrations
 
             modelBuilder.Entity("Reserva_Restaurantes.Models.Restaurantes", b =>
                 {
+                    b.Navigation("ListaMesas");
+
                     b.Navigation("ListaReservas");
                 });
 #pragma warning restore 612, 618

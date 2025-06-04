@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json.Serialization;
 
 namespace Reserva_Restaurantes.Models;
@@ -20,7 +21,7 @@ public class Clientes
     /// <summary>
     /// Email do Cliente
     /// </summary>
-    [Required(ErrorMessage = "O {0} é de preenchimento obrigatório.")]
+    //[Required(ErrorMessage = "O {0} é de preenchimento obrigatório.")]
     [StringLength(64)]
     public string Email { get; set; }
     
@@ -28,7 +29,6 @@ public class Clientes
     /// Telefone do Cliente
     /// </summary>
     [Display(Name = "Telemóvel")]
-    [Required(ErrorMessage = "O {0} é de preenchimento obrigatório.")] 
     [RegularExpression("([+]|00)?[0-9]{6,17}", ErrorMessage = "O {0} só pode conter digitos. No mínimo 6. No máximo 17.")]
     [StringLength(17)]
     public string Telefone { get; set; }
@@ -39,4 +39,9 @@ public class Clientes
      */
     
     public ICollection<Reservas> ListaReservas { get; set; }
+    
+    [Display(Name = "Restaurante")]
+    [ForeignKey(nameof(Restaurante))]
+    public int? RestauranteFK { get; set; }
+    public Restaurantes Restaurante { get; set; }
 }

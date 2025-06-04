@@ -12,8 +12,8 @@ using Reserva_Restaurantes.Data;
 namespace Reserva_Restaurantes.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250604095541_BetterRest")]
-    partial class BetterRest
+    [Migration("20250604120404_Utilizadores")]
+    partial class Utilizadores
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -236,21 +236,23 @@ namespace Reserva_Restaurantes.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
+                    b.Property<int?>("RestauranteFK")
+                        .HasColumnType("int");
+
                     b.Property<string>("Telefone")
-                        .IsRequired()
                         .HasMaxLength(17)
                         .HasColumnType("nvarchar(17)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RestauranteFK");
 
                     b.ToTable("Clientes");
                 });
@@ -419,6 +421,15 @@ namespace Reserva_Restaurantes.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Reserva_Restaurantes.Models.Clientes", b =>
+                {
+                    b.HasOne("Reserva_Restaurantes.Models.Restaurantes", "Restaurante")
+                        .WithMany()
+                        .HasForeignKey("RestauranteFK");
+
+                    b.Navigation("Restaurante");
                 });
 
             modelBuilder.Entity("Reserva_Restaurantes.Models.Mesas", b =>

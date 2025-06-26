@@ -15,8 +15,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // ENTITY
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
-                       throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+var connectionString = builder.Configuration.GetConnectionString("AzureConnection") ??
+                       throw new InvalidOperationException("Connection string 'AzureConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -25,6 +26,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>() // -> adicionar autorização - controlo de roles
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 
 
 // JWTAdd commentMore actions
@@ -49,8 +51,7 @@ builder.Services.AddAuthentication()
 
 // o que é um singleton? o que é um transient? o que é um scoped?
 builder.Services.AddSingleton<TokenService>();
-// o que é um singleton? o que é um transient? o que é um scoped?
-builder.Services.AddSingleton<TokenService>();
+
 
 builder.Services.AddControllersWithViews();
 

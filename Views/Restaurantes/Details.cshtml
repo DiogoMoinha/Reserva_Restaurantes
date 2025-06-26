@@ -10,21 +10,22 @@
     <h4>Restaurante</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Nome)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Nome)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Endereco)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Endereco)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HoraAbertura)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CodPostal)
         </dt>
+
         <dd class = "col-sm-10">
             @{
                 if (Model.HoraAbertura.Minute < 10)
@@ -37,13 +38,13 @@
                 }
             }
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Foto)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.HoraAbertura)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Foto)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.HoraAbertura)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.HoraFecho)
         </dt>
         <dd class = "col-sm-10">
@@ -56,6 +57,19 @@
                 {
                     <p>@Model.HoraFecho.Hour:@(Model.HoraFecho.Minute)</p>
                 }
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Foto)
+        </dt>
+        <dd class="col-sm-10">
+            @if (!string.IsNullOrEmpty(Model.Foto))
+            {
+                <img src="~/imagens/@Model.Foto" alt="Foto do restaurante @Model.Nome" style="max-height:200px;" />
+            }
+            else
+            {
+                <p>Sem fotografia disponível.</p>
             }
         </dd>
     </dl>

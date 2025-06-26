@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Reserva_Restaurantes.Migrations
 {
     /// <inheritdoc />
-    public partial class listaMesas : Migration
+    public partial class Roles : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,31 +51,17 @@ namespace Reserva_Restaurantes.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Clientes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Telefone = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Clientes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Restaurantes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Endereco = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Nome = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
+                    Endereco = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
+                    CodPostal = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     HoraAbertura = table.Column<DateTime>(type: "datetime2", nullable: false),
                     HoraFecho = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Foto = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Foto = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -189,6 +175,27 @@ namespace Reserva_Restaurantes.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Clientes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
+                    Telefone = table.Column<string>(type: "nvarchar(17)", maxLength: 17, nullable: false),
+                    RestauranteFK = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clientes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Clientes_Restaurantes_RestauranteFK",
+                        column: x => x.RestauranteFK,
+                        principalTable: "Restaurantes",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Mesas",
                 columns: table => new
                 {
@@ -242,15 +249,15 @@ namespace Reserva_Restaurantes.Migrations
                 name: "Pagamento",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    metodo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    estado = table.Column<int>(type: "int", nullable: false),
+                    Metodo = table.Column<int>(type: "int", nullable: false),
+                    Estado = table.Column<int>(type: "int", nullable: false),
                     ReservasFK = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Pagamento", x => x.id);
+                    table.PrimaryKey("PK_Pagamento", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Pagamento_Reservas_ReservasFK",
                         column: x => x.ReservasFK,
@@ -297,6 +304,11 @@ namespace Reserva_Restaurantes.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Clientes_RestauranteFK",
+                table: "Clientes",
+                column: "RestauranteFK");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Mesas_RestauranteFK",

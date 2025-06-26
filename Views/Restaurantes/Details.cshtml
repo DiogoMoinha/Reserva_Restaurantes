@@ -25,8 +25,18 @@
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CodPostal)
         </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CodPostal)
+
+        <dd class = "col-sm-10">
+            @{
+                if (Model.HoraAbertura.Minute < 10)
+                {
+                    <p>@Model.HoraAbertura.Hour:0@(Model.HoraAbertura.Minute)</p>
+                }
+                else
+                {
+                    <p>@Model.HoraAbertura.Hour:@(Model.HoraAbertura.Minute)</p>
+                }
+            }
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.HoraAbertura)
@@ -37,8 +47,17 @@
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.HoraFecho)
         </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.HoraFecho)
+        <dd class = "col-sm-10">
+            @{
+                if (Model.HoraFecho.Minute < 10)
+                {
+                    <p>@Model.HoraFecho.Hour:0@(Model.HoraFecho.Minute)</p>
+                }
+                else
+                {
+                    <p>@Model.HoraFecho.Hour:@(Model.HoraFecho.Minute)</p>
+                }
+            }
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Foto)

@@ -52,7 +52,7 @@ namespace Reserva_Restaurantes.Controllers
             ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Nome");
             return View();
         }
-
+        
         // POST: Mesas/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -60,15 +60,25 @@ namespace Reserva_Restaurantes.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,NumMesa,Capacidade,RestauranteFK")] Mesas mesas)
         {
+            bool mesaRepetida = await _context.Mesas
+                .AnyAsync(m => m.NumMesa == mesas.NumMesa && m.RestauranteFK == mesas.RestauranteFK);
+
+            if (mesaRepetida)
+            {
+                ModelState.AddModelError("", "Já existe uma mesa com este número neste restaurante.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(mesas);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Id", mesas.RestauranteFK);
+
+            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Nome", mesas.RestauranteFK);
             return View(mesas);
         }
+
 
         // GET: Mesas/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -94,9 +104,16 @@ namespace Reserva_Restaurantes.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,NumMesa,Capacidade,RestauranteFK")] Mesas mesas)
         {
-            if (id != mesas.Id)
+            if (id != mesas.Id) return NotFound();
+
+            bool mesaRepetida = await _context.Mesas
+                .AnyAsync(m => m.NumMesa == mesas.NumMesa &&
+                               m.RestauranteFK == mesas.RestauranteFK &&
+                               m.Id != mesas.Id); // ignora a própria mesa
+
+            if (mesaRepetida)
             {
-                return NotFound();
+                ModelState.AddModelError("", "Já existe uma mesa com este número neste restaurante.");
             }
 
             if (ModelState.IsValid)
@@ -108,20 +125,16 @@ namespace Reserva_Restaurantes.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MesasExists(mesas.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!MesasExists(mesas.Id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Id", mesas.RestauranteFK);
+
+            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Nome", mesas.RestauranteFK);
             return View(mesas);
         }
+
 
         // GET: Mesas/Delete/5
         public async Task<IActionResult> Delete(int? id)

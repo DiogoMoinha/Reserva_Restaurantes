@@ -34,10 +34,19 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Data)
+                @(item.Data.Day + "/" + @item.Data.Month + "/" +@item.Data.Year)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Hora)
+                @{
+                    if (item.Hora.Minute < 10)
+                    {
+                        <p>@item.Hora.Hour:0@(item.Hora.Minute)</p>
+                    }
+                    else
+                    {
+                        <p>@item.Hora.Hour:@(item.Hora.Minute)</p>
+                    }
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PessoasQtd)

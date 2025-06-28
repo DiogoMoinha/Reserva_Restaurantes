@@ -1,41 +1,40 @@
 @model Reserva_Restaurantes.Models.Pagamento
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Pagamento";
 }
 
-<h1>Editar</h1>
+<h1>Editar Pagamento</h1>
 
-<h4>Pagamento</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="id" />
-            <div class="form-group">
-                <label asp-for="metodo" class="control-label"></label>
-                <input asp-for="metodo" class="form-control" />
-                <span asp-validation-for="metodo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="estado" class="control-label"></label>
-                <input asp-for="estado" class="form-control" />
-                <span asp-validation-for="estado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ReservasFK" class="control-label"></label>
-                <select asp-for="ReservasFK" class="form-control" asp-items="ViewBag.ReservasFK"></select>
-                <span asp-validation-for="ReservasFK" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Metodo" class="control-label"></label>
+        <select asp-for="Metodo" class="form-control" asp-items="ViewBag.MetodosPagamento">
+            <option value="">-- Selecionar método --</option>
+        </select>
+        <span asp-validation-for="Metodo" class="text-danger"></span>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Voltar à lista</a>
-</div>
+    <div class="form-group">
+        <label asp-for="Estado" class="control-label"></label>
+        <select asp-for="Estado" class="form-control" asp-items="ViewBag.EstadosPagamento">
+            <option value="">-- Selecionar estado --</option>
+        </select>
+        <span asp-validation-for="Estado" class="text-danger"></span>
+    </div>
 
+    <div class="form-group">
+        <label asp-for="ReservasFK" class="control-label"></label>
+        <input asp-for="ReservasFK" class="form-control" />
+        <span asp-validation-for="ReservasFK" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

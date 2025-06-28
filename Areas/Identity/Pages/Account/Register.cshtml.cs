@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Reserva_Restaurantes.Data;
+using Reserva_Restaurantes.Models;
+
 
 namespace Reserva_Restaurantes.Areas.Identity.Pages.Account
 {
@@ -39,6 +41,7 @@ namespace Reserva_Restaurantes.Areas.Identity.Pages.Account
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
             ApplicationDbContext context) // <- novo parâmetro
+
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -112,6 +115,8 @@ namespace Reserva_Restaurantes.Areas.Identity.Pages.Account
             [Display(Name = "Confirmar Palavra-passe")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+            
+            public Clientes Cliente { get; set; }
         }
 
 
@@ -128,7 +133,6 @@ namespace Reserva_Restaurantes.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
-
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
@@ -137,19 +141,18 @@ namespace Reserva_Restaurantes.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    // Criar cliente na base de dados
-                    var novoCliente = new Models.Clientes
-                    {
-                        Nome = Input.Nome,
-                        Email = Input.Email,
-                        Telefone = Input.Telefone
-                    };
 
-                    _context.Clientes.Add(novoCliente);
-                    await _context.SaveChangesAsync();
-
-                    // Enviar email de confirmação
+                    // cria o utilizador na tabela Utilizadores
+                    Input.Cliente.Email = user.UserName;
+                    _context.Add(Input.Cliente);
+                    _context.SaveChanges();
+                    
                     var userId = await _userManager.GetUserIdAsync(user);
+                    
+                    //
+                    _context.UserRoles.Add(new IdentityUserRole<string>() { RoleId = "a", UserId = userId });
+                    
+                    
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(

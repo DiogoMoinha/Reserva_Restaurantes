@@ -22,6 +22,9 @@
                 @Html.DisplayNameFor(model => model.Endereco)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.CodPostal)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.HoraAbertura)
             </th>
             <th>
@@ -41,6 +44,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Endereco)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CodPostal)
             </td>
             <td>
                 @{
@@ -67,7 +73,6 @@
                 }
             </td>
             <td>
-                @*         @Html.DisplayFor(modelItem => item.Ficheiro)   *@
                 <img src="~/imagens/@item.Foto"
                      alt="imagem do restaurante com o Nome '@item.Nome'."
                      title="@item.Nome"

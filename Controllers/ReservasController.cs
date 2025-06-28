@@ -83,8 +83,8 @@ namespace Reserva_Restaurantes.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteFK"] = new SelectList(_context.Clientes, "Id", "Id", reservas.ClienteFK);
-            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Id", reservas.RestauranteFK);
+            ViewData["ClienteFK"] = new SelectList(_context.Clientes, "Id", "Nome", reservas.ClienteFK);
+            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Nome", reservas.RestauranteFK);
             return View(reservas);
         }
 
@@ -138,8 +138,8 @@ namespace Reserva_Restaurantes.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteFK"] = new SelectList(_context.Clientes, "Id", "Id", reservas.ClienteFK);
-            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Id", reservas.RestauranteFK);
+            ViewData["ClienteFK"] = new SelectList(_context.Clientes, "Id", "Nome", reservas.ClienteFK);
+            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Nome", reservas.RestauranteFK);
             return View(reservas);
         }
 
@@ -159,8 +159,8 @@ namespace Reserva_Restaurantes.Controllers
             {
                 return NotFound();
             }
-            ViewData["ClienteFK"] = new SelectList(_context.Clientes, "Id", "Id");
-            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Id");
+            ViewData["ClienteFK"] = new SelectList(_context.Clientes, "Id", "Nome");
+            ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Nome");
             return View(reservas);
         }
 

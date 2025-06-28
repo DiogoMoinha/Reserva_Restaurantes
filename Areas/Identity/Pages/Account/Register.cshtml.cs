@@ -78,25 +78,7 @@ namespace Reserva_Restaurantes.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
-            [Required]
-            [Display(Name = "Nome")]
-            public string Nome { get; set; }
             
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Required]
-            [EmailAddress]
-            [Display(Name = "Email")]
-            public string Email { get; set; }
-            
-            [Required]
-            [Display(Name = "Telemóvel")]
-            [RegularExpression("([+]|00)?[0-9]{6,17}", ErrorMessage = "O {0} só pode conter digitos. No mínimo 6.")]
-            public string Telefone { get; set; }
-
-
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -133,23 +115,23 @@ namespace Reserva_Restaurantes.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 
-                // Verifica se já existe algum cliente com o mesmo número de telefone
+                // Verifica se já existe algum cliente com o mesmo email
                 var existingEmail = _context.Clientes
-                    .FirstOrDefault(c => c.Email == Input.Email);
+                    .FirstOrDefault(c => c.Email == Input.Cliente.Email);
 
                 if (existingEmail != null)
                 {
-                    ModelState.AddModelError("Input.Email", "Este Email já está registado.");
+                    ModelState.AddModelError("Input.Cliente.Email", "Este Email já está registado.");
                     return Page();
                 }
                 
-                // Verifica se já existe algum cliente com o mesmo número de telefone
+                // Verifica se já existe algum cliente com o mesmo nome
                 var existingNome = _context.Clientes
-                    .FirstOrDefault(c => c.Telefone == Input.Cliente.Nome);
+                    .FirstOrDefault(c => c.Nome == Input.Cliente.Nome);
 
                 if (existingNome != null)
                 {
-                    ModelState.AddModelError("Input.Cliente.Nome", "Este número de telemóvel já está registado.");
+                    ModelState.AddModelError("Input.Cliente.Nome", "Este nome já está registado.");
                     return Page();
                 }
                 
@@ -164,8 +146,8 @@ namespace Reserva_Restaurantes.Areas.Identity.Pages.Account
                 }
                 
                 var user = CreateUser();
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, Input.Cliente.Email, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, Input.Cliente.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
@@ -192,12 +174,12 @@ namespace Reserva_Restaurantes.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirmação de conta",
+                    await _emailSender.SendEmailAsync(Input.Cliente.Email, "Confirmação de conta",
                         $"Por favor confirme a sua conta <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicando aqui</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        return RedirectToPage("RegisterConfirmation", new { email = Input.Cliente.Email, returnUrl = returnUrl });
                     }
                     else
                     {

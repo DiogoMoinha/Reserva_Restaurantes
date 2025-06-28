@@ -1,0 +1,18 @@
+﻿@model Reserva_Restaurantes.Models.Clientes
+
+@{
+    ViewData["Title"] = "Promover a Funcionário";
+}
+
+<h2>Promover @Model.Email a Funcionário</h2>
+
+<form asp-action="PromoteToFuncionario" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+
+    <div class="form-group">
+        <label for="restauranteId">Restaurante</label>
+        <select class="form-control" id="restauranteId" name="restauranteId" asp-items="ViewBag.Restaurantes"></select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Promover</button>
+</form>

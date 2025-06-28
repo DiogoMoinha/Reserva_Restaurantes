@@ -23,8 +23,52 @@ public class PagamentoController : Controller
     // GET: Pagamento
     public async Task<IActionResult> Index()
     {
-        var applicationDbContext = _context.Pagamento.Include(p => p.Reserva);
-        return View(await applicationDbContext.ToListAsync());
+        var userEmail = User.Identity.Name;
+        
+        var applicationDbContext = _context.Pagamento
+            .Include(p => p.Reserva)
+            .ThenInclude(r => r.Cliente);
+        
+        if (User.IsInRole("Administrador"))
+        {
+            // Admins can see all payments
+            return View(await applicationDbContext.ToListAsync());
+        }
+        
+        if (User.IsInRole("Funcionario"))
+        {
+            // Obter o funcionário pelo email
+            var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+            if (funcionario == null)
+                return Unauthorized();
+
+            var restauranteId = funcionario.RestauranteFK;
+
+            // Filtrar pagamentos para os que pertencem ao restaurante do funcionário
+            var pagamentosFuncionario = _context.Pagamento
+                .Include(p => p.Reserva)
+                .ThenInclude(r => r.Restaurante)
+                .Where(p => p.Reserva.RestauranteFK == restauranteId);
+
+            return View(await pagamentosFuncionario.ToListAsync());
+        }
+        
+        // For regular users (Clientes)
+        if (string.IsNullOrEmpty(userEmail))
+            return Unauthorized();
+
+        var cliente = await _context.Clientes
+            .FirstOrDefaultAsync(c => c.Email == userEmail);
+
+        if (cliente == null)
+            return NotFound("Cliente não encontrado");
+
+        // Only show payments related to the client's reservations
+        var userPagamentos = await applicationDbContext
+            .Where(p => p.Reserva.ClienteFK == cliente.Id)
+            .ToListAsync();
+
+        return View(userPagamentos);
     }
 
     // GET: Pagamento/Details/5
@@ -44,7 +88,7 @@ public class PagamentoController : Controller
     }
 
     // GET: Pagamento/Create
-    [Authorize(Roles = "Funcionario")]
+    [Authorize(Roles = "Administrador,Funcionario")]
     public IActionResult Create()
     {
         PopularViewData();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace Reserva_Restaurantes.Controllers
         }
 
         // GET: Clientes
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Clientes.ToListAsync());
@@ -178,6 +180,46 @@ namespace Reserva_Restaurantes.Controllers
                 return NotFound();
 
             return RedirectToAction("Details", new { id = cliente.Id });
+        }
+        
+        [Authorize(Roles = "Administrador")]
+        public async Task<IActionResult> PromoteToFuncionario(int id)
+        {
+            var cliente = await _context.Clientes.FindAsync(id);
+            if (cliente == null)
+                return NotFound();
+
+            var restauranteList = await _context.Restaurantes.ToListAsync();
+            ViewBag.Restaurantes = new SelectList(restauranteList, "Id", "Nome");
+
+            return View(cliente);
+        }
+
+        [Authorize(Roles = "Administrador")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PromoteToFuncionario(int id, int restauranteId, [FromServices] UserManager<IdentityUser> userManager)
+        {
+            var cliente = await _context.Clientes.FindAsync(id);
+            if (cliente == null)
+                return NotFound();
+
+            // Assign role
+            var user = await userManager.FindByEmailAsync(cliente.Email);
+            if (user == null)
+                return NotFound("User not found in Identity.");
+
+            if (!await userManager.IsInRoleAsync(user, "Funcionario"))
+            {
+                await userManager.AddToRoleAsync(user, "Funcionario");
+            }
+
+            // Associate with restaurante
+            cliente.RestauranteFK = restauranteId;
+            _context.Update(cliente);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

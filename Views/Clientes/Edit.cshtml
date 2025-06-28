@@ -37,7 +37,17 @@
 </div>
 
 <div>
-    <a asp-action="Index">Voltar à lista</a>
+    @if (User.IsInRole("Administrador"))
+    {
+        <a asp-action="Index">Voltar à lista</a>
+    }
+    else
+    {
+        <a asp-controller="Home" asp-action="Index">Voltar ao Início</a>
+        <span> | </span>
+        <a asp-action="Details" asp-route-id="@Model?.Id">Voltar atrás</a>
+    }
+        
 </div>
 
 

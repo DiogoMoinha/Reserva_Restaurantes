@@ -7,7 +7,10 @@
 <h1>Página dos Pagamentos</h1>
 
 <p>
-    <a asp-action="Create">Criar novo pagamento</a>
+    @if (User.IsInRole("Funcionario") || User.IsInRole("Administrador"))
+    {
+        <a asp-action="Create">Criar novo pagamento</a>
+    }
 </p>
 <table class="table">
     <thead>

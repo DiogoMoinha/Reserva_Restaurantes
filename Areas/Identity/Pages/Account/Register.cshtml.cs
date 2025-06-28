@@ -164,6 +164,7 @@ namespace Reserva_Restaurantes.Areas.Identity.Pages.Account
                     
                     //
                     _context.UserRoles.Add(new IdentityUserRole<string>() { RoleId = "a", UserId = userId });
+                    _context.UserRoles.Add(new IdentityUserRole<string>() { RoleId = "f", UserId = userId });
                     
                     
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

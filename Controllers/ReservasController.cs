@@ -27,6 +27,37 @@ namespace Reserva_Restaurantes.Controllers
         {
             // Obter o email do utilizador autenticado
             var userEmail = User.Identity.Name;
+            
+            if (User.IsInRole("Administrador"))
+            {
+                var applicationDbContext = _context.Reservas
+                    .Include(p => p.Cliente)
+                    .Include(r => r.Restaurante);
+                // Admins and Funcionarios can see all payments
+                return View(await applicationDbContext.ToListAsync());
+            }
+
+            if (User.IsInRole("Funcionario"))
+            {
+                // Obter o restaurante associado ao funcionário (cliente)
+                var funcionario = await _context.Clientes
+                    .FirstOrDefaultAsync(c => c.Email == userEmail);
+
+                if (funcionario == null)
+                {
+                    return Unauthorized(); // ou RedirectToAction("AccessDenied")
+                }
+
+                var restauranteId = funcionario.RestauranteFK;
+
+                // Apenas reservas do restaurante do funcionário
+                var reservasFuncionario = _context.Reservas
+                    .Include(r => r.Restaurante)
+                    .Include(r => r.Cliente)
+                    .Where(r => r.RestauranteFK == restauranteId);
+
+                return View(await reservasFuncionario.ToListAsync());
+            }
 
             // Procurar o cliente correspondente ao email do utilizador
             var cliente = await _context.Clientes

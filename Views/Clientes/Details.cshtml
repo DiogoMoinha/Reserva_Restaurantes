@@ -8,7 +8,7 @@
 <h1>Detalhes</h1>
 
 <div>
-    <h4>Utilizadores</h4>
+    <h4>Utilizador</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -32,6 +32,17 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Voltar à lista</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Editar</a>
+    @if (User.IsInRole("Administrador"))
+    {
+        <span> | </span>
+        <a asp-action="Index">Voltar à lista</a>
+    }
+    else
+    {
+        <span> | </span>
+        <a asp-controller="Home" asp-action="Index">Voltar ao Início</a>
+        <span> | </span>
+        <a asp-action="Delete" asp-route-id="@Model?.Id">Apagar Conta</a>
+    }
 </div>

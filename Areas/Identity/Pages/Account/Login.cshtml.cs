@@ -128,7 +128,7 @@ namespace Reserva_Restaurantes.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Tentativa de autenticação invalida.");
                     return Page();
                 }
             }

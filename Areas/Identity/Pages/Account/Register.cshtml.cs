@@ -102,7 +102,7 @@ namespace Reserva_Restaurantes.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
-            [StringLength(100, ErrorMessage = "A {0} tem de ter pelo menos {2} e no máximo {1} caracters.", MinimumLength = 6)]
+            [StringLength(100, ErrorMessage = "A {0} deve ter no minimo {2} e no máximo {1} caracteres.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Palavra-passe")]
             public string Password { get; set; }
@@ -112,8 +112,8 @@ namespace Reserva_Restaurantes.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirmar Palavra-passe")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Confirmar password")]
+            [Compare("Password", ErrorMessage = "A password e confirmação de password não são iguais.")]
             public string ConfirmPassword { get; set; }
             
             public Clientes Cliente { get; set; }
@@ -132,6 +132,37 @@ namespace Reserva_Restaurantes.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+                
+                // Verifica se já existe algum cliente com o mesmo número de telefone
+                var existingEmail = _context.Clientes
+                    .FirstOrDefault(c => c.Email == Input.Email);
+
+                if (existingEmail != null)
+                {
+                    ModelState.AddModelError("Input.Email", "Este Email já está registado.");
+                    return Page();
+                }
+                
+                // Verifica se já existe algum cliente com o mesmo número de telefone
+                var existingNome = _context.Clientes
+                    .FirstOrDefault(c => c.Telefone == Input.Cliente.Nome);
+
+                if (existingNome != null)
+                {
+                    ModelState.AddModelError("Input.Cliente.Nome", "Este número de telemóvel já está registado.");
+                    return Page();
+                }
+                
+                // Verifica se já existe algum cliente com o mesmo número de telefone
+                var existingPhone = _context.Clientes
+                    .FirstOrDefault(c => c.Telefone == Input.Cliente.Telefone);
+
+                if (existingPhone != null)
+                {
+                    ModelState.AddModelError("Input.Cliente.Telefone", "Este número de telemóvel já está registado.");
+                    return Page();
+                }
+                
                 var user = CreateUser();
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -139,7 +170,7 @@ namespace Reserva_Restaurantes.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    _logger.LogInformation("O utilizador criou uma nova conta com password.");
 
 
                     // cria o utilizador na tabela Utilizadores

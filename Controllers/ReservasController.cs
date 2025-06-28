@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +12,7 @@ using Reserva_Restaurantes.Models;
 
 namespace Reserva_Restaurantes.Controllers
 {
+    [Authorize]
     public class ReservasController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,10 +25,20 @@ namespace Reserva_Restaurantes.Controllers
         // GET: Reservas
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = 
-                _context.Reservas.Include(r => r.Restaurante)
-                    .Include(r=>r.Cliente);
-            return View(await applicationDbContext.ToListAsync());
+            // Obter o email do utilizador autenticado
+            var userEmail = User.Identity.Name;
+
+            // Procurar o cliente correspondente ao email do utilizador
+            var cliente = await _context.Clientes
+                .FirstOrDefaultAsync(c => c.Email == userEmail);
+            
+            // Filtrar as reservas do cliente
+            var reservas = await _context.Reservas
+                .Include(r => r.Restaurante)
+                .Where(r => r.ClienteFK == cliente.Id)
+                .ToListAsync();
+
+            return View(reservas);
         }
 
         // GET: Reservas/Details/5

@@ -7,6 +7,13 @@
 
 <h1>Página de Utilizadores</h1>
 
+@* Só mostra se for Admin *@
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Criar utilizador</a>
+    </p>
+}
 <table class="table">
     <thead>
         <tr>

@@ -7,7 +7,10 @@
 <h1>Página dos Restaurantes</h1>
 
 <p>
-    <a asp-action="Create">Criar novo restaurante</a>
+    @if (User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        <a asp-action="Create" class="btn btn-primary">Criar Restaurante</a>
+    }
 </p>
 <table class="table">
     <thead>

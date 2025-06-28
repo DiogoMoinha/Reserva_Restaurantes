@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Reserva_Restaurantes.Data;
 
@@ -10,9 +11,11 @@ using Reserva_Restaurantes.Data;
 namespace Reserva_Restaurantes.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250626163023_registar")]
+    partial class registar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.15");
@@ -220,23 +223,18 @@ namespace Reserva_Restaurantes.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Nome")
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.Property<int?>("RestauranteFK")
-                        .HasColumnType("int");
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Telefone")
-                        .HasMaxLength(17)
-                        .HasColumnType("nvarchar(17)");
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RestauranteFK");
 
                     b.ToTable("Clientes");
                 });
@@ -265,22 +263,20 @@ namespace Reserva_Restaurantes.Migrations
 
             modelBuilder.Entity("Reserva_Restaurantes.Models.Pagamento", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Estado")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Metodo")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("ReservasFK")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
-                    b.HasKey("Id");
+                    b.Property<int>("estado")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("metodo")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("id");
 
                     b.HasIndex("ReservasFK");
 
@@ -322,20 +318,12 @@ namespace Reserva_Restaurantes.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-                        
-                    b.Property<string>("CodPostal")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Endereco")
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Foto")
-
-                        .HasMaxLength(2048)
-                        .HasColumnType("nvarchar(2048)");
-
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("HoraAbertura")
                         .HasColumnType("TEXT");
@@ -344,8 +332,7 @@ namespace Reserva_Restaurantes.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Nome")
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -401,15 +388,6 @@ namespace Reserva_Restaurantes.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Reserva_Restaurantes.Models.Clientes", b =>
-                {
-                    b.HasOne("Reserva_Restaurantes.Models.Restaurantes", "Restaurante")
-                        .WithMany()
-                        .HasForeignKey("RestauranteFK");
-
-                    b.Navigation("Restaurante");
                 });
 
             modelBuilder.Entity("Reserva_Restaurantes.Models.Mesas", b =>

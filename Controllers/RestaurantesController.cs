@@ -158,6 +158,16 @@ namespace Reserva_Restaurantes.Controllers
             {
                 return NotFound();
             }
+            
+            if (User.IsInRole("Funcionario"))
+            {
+                var userEmail = User.Identity.Name;
+                var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+
+                if (funcionario == null || funcionario.RestauranteFK != restaurantes.Id)
+                    return Forbid();
+            }
+            
             return View(restaurantes);
         }
 
@@ -172,6 +182,15 @@ public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Endereco,CodPostal,
     if (id != restaurantes.Id)
     {
         return NotFound();
+    }
+    
+    if (User.IsInRole("Funcionario"))
+    {
+        var userEmail = User.Identity.Name;
+        var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+
+        if (funcionario == null || funcionario.RestauranteFK != restaurantes.Id)
+            return Forbid();
     }
     
     // Carregar a entidade original para manter Foto se necessário
@@ -262,6 +281,15 @@ public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Endereco,CodPostal,
             {
                 return NotFound();
             }
+            
+            if (User.IsInRole("Funcionario"))
+            {
+                var userEmail = User.Identity.Name;
+                var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+
+                if (funcionario == null || funcionario.RestauranteFK != restaurantes.Id)
+                    return Forbid();
+            }
 
             return View(restaurantes);
         }
@@ -275,6 +303,14 @@ public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Endereco,CodPostal,
             var restaurantes = await _context.Restaurantes.FindAsync(id);
             if (restaurantes != null)
             {
+                if (User.IsInRole("Funcionario"))
+                {
+                    var userEmail = User.Identity.Name;
+                    var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+
+                    if (funcionario == null || funcionario.RestauranteFK != restaurantes.Id)
+                        return Forbid();
+                }
                 _context.Restaurantes.Remove(restaurantes);
             }
 

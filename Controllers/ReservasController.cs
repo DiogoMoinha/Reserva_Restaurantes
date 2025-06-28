@@ -84,14 +84,31 @@ namespace Reserva_Restaurantes.Controllers
             var reservas = await _context.Reservas
                 .Include(r => r.Restaurante)
                 .Include(r => r.Cliente)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(r => r.Id == id);
+            
             if (reservas == null)
             {
                 return NotFound();
             }
+            var userEmail = User.Identity.Name;
+            if (User.IsInRole("Funcionario"))
+            {
+                
+                var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+                if (funcionario == null || reservas.RestauranteFK != funcionario.RestauranteFK)
+                    return Forbid();
+            }
+            
+            var utilizador = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+            if (utilizador == null) return Forbid();
+            if (reservas.ClienteFK == utilizador.Id)
+            {
+                return View(reservas);
+            }
+            
             ViewData["ClienteFK"] = new SelectList(_context.Clientes, "Id", "Nome");
             ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Nome");
-            return View(reservas);
+            return Forbid();
         }
 
         // GET: Reservas/Create
@@ -123,7 +140,7 @@ namespace Reserva_Restaurantes.Controllers
         }
 
         // GET: Reservas/Edit/5
-        [Authorize]
+        [Authorize(Roles = "Funcionario")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -131,14 +148,25 @@ namespace Reserva_Restaurantes.Controllers
                 return NotFound();
             }
 
-            var reservas = await _context.Reservas.FindAsync(id);
-            if (reservas == null)
+            var reserva = await _context.Reservas
+                .Include(r => r.Restaurante)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (reserva == null) return NotFound();
+            
+            if (User.IsInRole("Funcionario"))
             {
-                return NotFound();
+                var userEmail = User.Identity.Name;
+                var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+                if (funcionario == null) return Unauthorized();
+
+                if (reserva.RestauranteFK != funcionario.RestauranteFK)
+                    return Forbid();
             }
+            
             ViewData["ClienteFK"] = new SelectList(_context.Clientes, "Id", "Nome");
             ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Nome");
-            return View(reservas);
+            return View(reserva);
         }
 
         // POST: Reservas/Edit/5
@@ -152,6 +180,20 @@ namespace Reserva_Restaurantes.Controllers
             if (id != reservas.Id)
             {
                 return NotFound();
+            }
+            
+            var existing = await _context.Reservas
+                .AsNoTracking()
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (existing == null) return NotFound();
+            
+            if (User.IsInRole("Funcionario"))
+            {
+                var userEmail = User.Identity.Name;
+                var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+                if (funcionario == null || existing.RestauranteFK != funcionario.RestauranteFK)
+                    return Forbid();
             }
 
             if (ModelState.IsValid)
@@ -174,6 +216,7 @@ namespace Reserva_Restaurantes.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            
             ViewData["ClienteFK"] = new SelectList(_context.Clientes, "Id", "Nome", reservas.ClienteFK);
             ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Nome", reservas.RestauranteFK);
             return View(reservas);
@@ -191,11 +234,20 @@ namespace Reserva_Restaurantes.Controllers
             var reservas = await _context.Reservas
                 .Include(r => r.Restaurante)
                 .Include(r=>r.Cliente)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(r => r.Id == id);
             if (reservas == null)
             {
                 return NotFound();
             }
+            
+            if (User.IsInRole("Funcionario"))
+            {
+                var userEmail = User.Identity.Name;
+                var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+                if (funcionario == null || reservas.RestauranteFK != funcionario.RestauranteFK)
+                    return Forbid();
+            }
+            
             ViewData["ClienteFK"] = new SelectList(_context.Clientes, "Id", "Nome");
             ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Nome");
             return View(reservas);
@@ -208,8 +260,17 @@ namespace Reserva_Restaurantes.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var reservas = await _context.Reservas.FindAsync(id);
+            
+            
             if (reservas != null)
             {
+                if (User.IsInRole("Funcionario"))
+                {
+                    var userEmail = User.Identity.Name;
+                    var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+                    if (funcionario == null || reservas.RestauranteFK != funcionario.RestauranteFK)
+                        return Forbid();
+                }
                 _context.Reservas.Remove(reservas);
             }
 

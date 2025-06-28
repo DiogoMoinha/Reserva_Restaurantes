@@ -24,6 +24,23 @@ namespace Reserva_Restaurantes.Controllers
         // GET: Mesas
         public async Task<IActionResult> Index()
         {
+            if (User.IsInRole("Funcionario"))
+            {
+                var userEmail = User.Identity?.Name;
+                var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+
+                if (funcionario == null)
+                    return Forbid();
+
+                // Apenas mesas do restaurante do funcionário
+                var mesasFuncionario = await _context.Mesas
+                    .Include(m => m.Restaurante)
+                    .Where(m => m.RestauranteFK == funcionario.RestauranteFK)
+                    .ToListAsync();
+
+                return View(mesasFuncionario);
+            }
+            
             var applicationDbContext =
                 _context.Mesas.Include(m => m.Restaurante);
             return View(await applicationDbContext.ToListAsync());
@@ -40,9 +57,18 @@ namespace Reserva_Restaurantes.Controllers
             var mesas = await _context.Mesas
                 .Include(m => m.Restaurante)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            
             if (mesas == null)
             {
                 return NotFound();
+            }
+            
+            if (User.IsInRole("Funcionario"))
+            {
+                var userEmail = User.Identity?.Name;
+                var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+                if (funcionario == null || funcionario.RestauranteFK != mesas.RestauranteFK)
+                    return Forbid();
             }
 
             return View(mesas);
@@ -90,11 +116,22 @@ namespace Reserva_Restaurantes.Controllers
                 return NotFound();
             }
 
-            var mesas = await _context.Mesas.FindAsync(id);
+            var mesas = await _context.Mesas
+                .Include(m => m.Restaurante)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (mesas == null)
             {
                 return NotFound();
             }
+            
+            if (User.IsInRole("Funcionario"))
+            {
+                var userEmail = User.Identity?.Name;
+                var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+                if (funcionario == null || funcionario.RestauranteFK != mesas.RestauranteFK)
+                    return Forbid();
+            }
+            
             ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Nome");
             return View(mesas);
         }
@@ -107,6 +144,14 @@ namespace Reserva_Restaurantes.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("Id,NumMesa,Capacidade,RestauranteFK")] Mesas mesas)
         {
             if (id != mesas.Id) return NotFound();
+            
+            if (User.IsInRole("Funcionario"))
+            {
+                var userEmail = User.Identity?.Name;
+                var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+                if (funcionario == null || funcionario.RestauranteFK != mesas.RestauranteFK)
+                    return Forbid();
+            }
 
             bool mesaRepetida = await _context.Mesas
                 .AnyAsync(m => m.NumMesa == mesas.NumMesa &&
@@ -153,6 +198,15 @@ namespace Reserva_Restaurantes.Controllers
             {
                 return NotFound();
             }
+            
+            if (User.IsInRole("Funcionario"))
+            {
+                var userEmail = User.Identity?.Name;
+                var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+                if (funcionario == null || funcionario.RestauranteFK != mesas.RestauranteFK)
+                    return Forbid();
+            }
+            
             ViewData["RestauranteFK"] = new SelectList(_context.Restaurantes, "Id", "Nome");
             return View(mesas);
         }
@@ -165,6 +219,13 @@ namespace Reserva_Restaurantes.Controllers
             var mesas = await _context.Mesas.FindAsync(id);
             if (mesas != null)
             {
+                if (User.IsInRole("Funcionario"))
+                {
+                    var userEmail = User.Identity?.Name;
+                    var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+                    if (funcionario == null || funcionario.RestauranteFK != mesas.RestauranteFK)
+                        return Forbid();
+                }
                 _context.Mesas.Remove(mesas);
             }
 

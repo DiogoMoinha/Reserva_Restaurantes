@@ -79,12 +79,33 @@ public class PagamentoController : Controller
 
         var pagamento = await _context.Pagamento
             .Include(p => p.Reserva)
-            .FirstOrDefaultAsync(m => m.Id == id);
+            .ThenInclude(r => r.Restaurante)
+            .FirstOrDefaultAsync(p => p.Id == id);
 
         if (pagamento == null)
             return NotFound();
+        
+        var userEmail = User.Identity.Name;
+        var utilizador = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
 
-        return View(pagamento);
+        if (utilizador == null) return Forbid();
+        if (User.IsInRole("Administrador"))
+        {
+            return View(pagamento);
+        }
+
+        if (User.IsInRole("Funcionario"))
+        {
+            if (utilizador.RestauranteFK == pagamento.Reserva.RestauranteFK)
+                return View(pagamento);
+        }
+
+        if (pagamento.Reserva.ClienteFK == utilizador.Id)
+        {
+            return View(pagamento);
+        }
+
+        return Forbid();
     }
 
     // GET: Pagamento/Create
@@ -118,9 +139,19 @@ public class PagamentoController : Controller
         if (id == null)
             return NotFound();
 
-        var pagamento = await _context.Pagamento.FindAsync(id);
+        var pagamento = await _context.Pagamento
+            .Include(p => p.Reserva)
+            .FirstOrDefaultAsync(p => p.Id == id);
         if (pagamento == null)
             return NotFound();
+        
+        if (User.IsInRole("Funcionario"))
+        {
+            var userEmail = User.Identity.Name;
+            var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+            if (funcionario == null || pagamento.Reserva.RestauranteFK != funcionario.RestauranteFK)
+                return Forbid();
+        }
 
         PopularViewData();
         return View(pagamento);
@@ -134,6 +165,21 @@ public class PagamentoController : Controller
     {
         if (id != pagamento.Id)
             return NotFound();
+        
+        var existing = await _context.Pagamento
+            .Include(p => p.Reserva)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (existing == null) return NotFound();
+
+        if (User.IsInRole("Funcionario"))
+        {
+            var userEmail = User.Identity.Name;
+            var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+            if (funcionario == null || existing.Reserva.RestauranteFK != funcionario.RestauranteFK)
+                return Forbid();
+        }
 
         if (ModelState.IsValid)
         {
@@ -164,10 +210,20 @@ public class PagamentoController : Controller
 
         var pagamento = await _context.Pagamento
             .Include(p => p.Reserva)
-            .FirstOrDefaultAsync(m => m.Id == id);
+            .ThenInclude(r => r.Restaurante)
+            .FirstOrDefaultAsync(p => p.Id == id);
 
         if (pagamento == null)
             return NotFound();
+        
+        if (User.IsInRole("Funcionario"))
+        {
+            var userEmail = User.Identity.Name;
+            var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+
+            if (funcionario == null || pagamento.Reserva.RestauranteFK != funcionario.RestauranteFK)
+                return Forbid();
+        }
 
         return View(pagamento);
     }
@@ -178,9 +234,20 @@ public class PagamentoController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var pagamento = await _context.Pagamento.FindAsync(id);
+        var pagamento = await _context.Pagamento
+            .Include(p => p.Reserva)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
         if (pagamento != null)
         {
+            if (User.IsInRole("Funcionario"))
+            {
+                var userEmail = User.Identity.Name;
+                var funcionario = await _context.Clientes.FirstOrDefaultAsync(c => c.Email == userEmail);
+
+                if (funcionario == null || pagamento.Reserva.RestauranteFK != funcionario.RestauranteFK)
+                    return Forbid();
+            }
             _context.Pagamento.Remove(pagamento);
             await _context.SaveChangesAsync();
         }

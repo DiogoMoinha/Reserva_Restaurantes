@@ -38,13 +38,13 @@ namespace Reserva_Restaurantes.Controllers.api
         {
             var identityUser = await _userManager.FindByEmailAsync(loginRequest.Email);
             if(identityUser == null)
-                return BadRequest("Invalid user or password");
+                return BadRequest("Utilizador ou paravra-passe invalidos");
             
             var resultPassword = await _signInManager.CheckPasswordSignInAsync(identityUser, loginRequest.Password, 
                 false);
             
             if(!resultPassword.Succeeded)
-                return BadRequest("Invalid user or password");
+                return BadRequest("Utilizador ou paravra-passe invalidos");
             
             var token = _tokenService.GenerateToken(identityUser);
             

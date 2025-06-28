@@ -7,8 +7,8 @@
 
 <h1>Página de Utilizadores</h1>
 
-@* Só mostra se for Admin *@
-@if (User.IsInRole("Admin"))
+
+@if (User.IsInRole("Administrador"))
 {
     <p>
         <a asp-action="Create" class="btn btn-primary">Criar utilizador</a>
@@ -42,9 +42,12 @@
                 @Html.DisplayFor(modelItem => item.Telefone)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Apagar</a>
+                @if (User.IsInRole("Administrador"))
+                {
+                    <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> <span> | </span>
+                    <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> <span> | </span>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Apagar</a>
+                }
             </td>
         </tr>
 }

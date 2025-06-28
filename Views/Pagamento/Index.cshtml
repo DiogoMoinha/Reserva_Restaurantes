@@ -38,9 +38,12 @@
                 @Html.DisplayFor(modelItem => item.Reserva.Id)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Apagar</a>
+                @if (User.IsInRole("Funcionario"))
+                {
+                    <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> <span> | </span>
+                    <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> <span> | </span>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Apagar</a>
+                }
             </td>
         </tr>
     }

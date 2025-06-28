@@ -7,7 +7,7 @@
 <h1>Página dos Restaurantes</h1>
 
 <p>
-    @if (User.Identity != null && User.Identity.IsAuthenticated)
+    @if (User.Identity != null && User.IsInRole("Administrador"))
     {
         <a asp-action="Create" class="btn btn-primary">Criar Restaurante</a>
     }
@@ -80,10 +80,15 @@
             </td>
             
             <td>
-                @if (User.IsInRole("Administrador"))
+                @if (User.IsInRole("Funcionario") || User.IsInRole("Administrador"))
                 {
                     <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> <span> | </span>
-                    <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> <span> | </span>
+                }
+                
+                <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a><span> | </span>
+                
+                @if (User.IsInRole("Administrador"))
+                {
                     <a asp-action="Delete" asp-route-id="@item.Id">Apagar</a>
                 }
             </td>

@@ -52,8 +52,9 @@ namespace Reserva_Restaurantes.Controllers
             return View(restaurantes);
         }
 
-        [Authorize]
+        
         // GET: Restaurantes/Create
+        [Authorize(Roles = "Administrador")]
         public IActionResult Create()
         {
             return View();
@@ -62,6 +63,7 @@ namespace Reserva_Restaurantes.Controllers
         // POST: Restaurantes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nome,Endereco,CodPostal,HoraAbertura,HoraFecho,Foto")] Restaurantes restaurantes, IFormFile imagemFoto)
@@ -143,6 +145,7 @@ namespace Reserva_Restaurantes.Controllers
         }
 
         // GET: Restaurantes/Edit/5
+        [Authorize(Roles = "Administrador,Funcionario")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -161,6 +164,7 @@ namespace Reserva_Restaurantes.Controllers
         // POST: Restaurantes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Administrador,Funcionario")]
         [HttpPost]
         [ValidateAntiForgeryToken]
 public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Endereco,CodPostal,HoraAbertura,HoraFecho,Foto")] Restaurantes restaurantes, IFormFile imagemFoto)
@@ -244,6 +248,7 @@ public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Endereco,CodPostal,
 
 
         // GET: Restaurantes/Delete/5
+        [Authorize(Roles = "Administrador,Funcionario")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -262,6 +267,7 @@ public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Endereco,CodPostal,
         }
 
         // POST: Restaurantes/Delete/5
+        [Authorize(Roles = "Administrador,Funcionario")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

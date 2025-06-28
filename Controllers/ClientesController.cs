@@ -11,6 +11,7 @@ using Reserva_Restaurantes.Models;
 
 namespace Reserva_Restaurantes.Controllers
 {
+    [Authorize]
     public class ClientesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -45,15 +46,18 @@ namespace Reserva_Restaurantes.Controllers
         }
 
         // GET: Clientes/Create
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Create()
         {
             return View();
         }
 
+        // POST: Clientes/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Create([Bind("Id,Nome,Email,Telefone")] Clientes cliente)
         {
             if (ModelState.IsValid)

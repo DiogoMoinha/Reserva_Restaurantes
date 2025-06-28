@@ -9,11 +9,12 @@ using Microsoft.EntityFrameworkCore;
 using Reserva_Restaurantes.Data;
 using Reserva_Restaurantes.Models;
 
-//[Authorize(Roles = "Administrador")]
+[Authorize]
 public class PagamentoController : Controller
 {
+    
     private readonly ApplicationDbContext _context;
-
+    
     public PagamentoController(ApplicationDbContext context)
     {
         _context = context;
@@ -43,6 +44,7 @@ public class PagamentoController : Controller
     }
 
     // GET: Pagamento/Create
+    [Authorize(Roles = "Funcionario")]
     public IActionResult Create()
     {
         PopularViewData();
@@ -50,6 +52,7 @@ public class PagamentoController : Controller
     }
 
     // POST: Pagamento/Create
+    [Authorize(Roles = "Funcionario")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Id,Metodo,Estado,ReservasFK")] Pagamento pagamento)
@@ -65,6 +68,7 @@ public class PagamentoController : Controller
     }
 
     // GET: Pagamento/Edit/5
+    [Authorize(Roles = "Funcionario")]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -79,6 +83,7 @@ public class PagamentoController : Controller
     }
 
     // POST: Pagamento/Edit/5
+    [Authorize(Roles = "Funcionario")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, [Bind("Id,Metodo,Estado,ReservasFK")] Pagamento pagamento)
@@ -107,6 +112,7 @@ public class PagamentoController : Controller
     }
 
     // GET: Pagamento/Delete/5
+    [Authorize(Roles = "Funcionario")]
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -123,6 +129,7 @@ public class PagamentoController : Controller
     }
 
     // POST: Pagamento/Delete/5
+    [Authorize(Roles = "Funcionario")]
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)

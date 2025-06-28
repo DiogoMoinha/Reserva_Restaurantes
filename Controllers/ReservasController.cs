@@ -42,6 +42,7 @@ namespace Reserva_Restaurantes.Controllers
         }
 
         // GET: Reservas/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -63,6 +64,7 @@ namespace Reserva_Restaurantes.Controllers
         }
 
         // GET: Reservas/Create
+        [Authorize]
         public IActionResult Create()
         {
             ViewData["ClienteFK"] = new SelectList(_context.Clientes, "Id", "Nome");
@@ -73,6 +75,7 @@ namespace Reserva_Restaurantes.Controllers
         // POST: Reservas/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Data,Hora,PessoasQtd,ClienteFK,RestauranteFK")] Reservas reservas)
@@ -89,6 +92,7 @@ namespace Reserva_Restaurantes.Controllers
         }
 
         // GET: Reservas/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -109,6 +113,7 @@ namespace Reserva_Restaurantes.Controllers
         // POST: Reservas/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Funcionario")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Data,Hora,PessoasQtd,ClienteFK,RestauranteFK")] Reservas reservas)
@@ -144,6 +149,7 @@ namespace Reserva_Restaurantes.Controllers
         }
 
         // GET: Reservas/Delete/5
+        [Authorize(Roles = "Funcionario")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -165,6 +171,7 @@ namespace Reserva_Restaurantes.Controllers
         }
 
         // POST: Reservas/Delete/5
+        [Authorize(Roles = "Funcionario")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

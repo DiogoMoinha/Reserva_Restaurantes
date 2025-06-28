@@ -29,6 +29,12 @@ namespace Reserva_Restaurantes.Controllers
         // GET: Clientes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var cliente = _context.Clientes.FirstOrDefault(c => c.Id == id);
+            if (cliente == null)
+                return NotFound();
+
+            return View(cliente);
+            
             if (id == null)
             {
                 return NotFound();
@@ -153,6 +159,21 @@ namespace Reserva_Restaurantes.Controllers
         private bool ClientesExists(int id)
         {
             return _context.Clientes.Any(e => e.Id == id);
+        }
+        
+        
+        [Authorize]
+        public IActionResult MyDetails()
+        {
+            var email = User.Identity?.Name;
+            if (string.IsNullOrEmpty(email))
+                return Unauthorized();
+
+            var cliente = _context.Clientes.FirstOrDefault(c => c.Email == email);
+            if (cliente == null)
+                return NotFound();
+
+            return RedirectToAction("Details", new { id = cliente.Id });
         }
     }
 }

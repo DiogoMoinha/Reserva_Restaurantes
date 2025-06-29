@@ -32,25 +32,19 @@ namespace Reserva_Restaurantes.Controllers
         // GET: Clientes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            var cliente = _context.Clientes.FirstOrDefault(c => c.Id == id);
-            if (cliente == null)
-                return NotFound();
-
-            return View(cliente);
-            
             if (id == null)
             {
                 return NotFound();
             }
-
-            var clientes = await _context.Clientes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (clientes == null)
-            {
+            
+            var cliente = _context.Clientes.FirstOrDefault(c => c.Id == id);
+            if (cliente == null)
                 return NotFound();
-            }
+            
+            if (!User.IsInRole("Administrador") && cliente.Email != User.Identity?.Name)
+                return Forbid();
 
-            return View(clientes);
+            return View(cliente);
         }
 
         // GET: Clientes/Create
@@ -91,6 +85,10 @@ namespace Reserva_Restaurantes.Controllers
             {
                 return NotFound();
             }
+            
+            if (!User.IsInRole("Administrador") && clientes.Email != User.Identity?.Name)
+                return Forbid();
+            
             return View(clientes);
         }
 
@@ -105,6 +103,34 @@ namespace Reserva_Restaurantes.Controllers
             {
                 return NotFound();
             }
+            
+            var clienteOriginal = await _context.Clientes.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+            if (clienteOriginal == null)
+                return NotFound();
+
+            if (!User.IsInRole("Administrador") && clienteOriginal.Email != User.Identity?.Name)
+                return Forbid();
+            
+            // Verificar se já existe outro cliente com o mesmo Email
+            bool emailDuplicado = await _context.Clientes
+                .AnyAsync(c => c.Email == clientes.Email && c.Id != clientes.Id);
+
+            if (emailDuplicado)
+                ModelState.AddModelError("Email", "Este email já está em uso.");
+            
+            // Verificar se já existe outro cliente com o mesmo Email
+            bool NomeDuplicado = await _context.Clientes
+                .AnyAsync(c => c.Nome == clientes.Nome && c.Id != clientes.Id);
+
+            if (NomeDuplicado)
+                ModelState.AddModelError("Nome", "Este nome já está em uso.");
+
+            // Verificar se já existe outro cliente com o mesmo Telefone
+            bool telefoneDuplicado = await _context.Clientes
+                .AnyAsync(c => c.Telefone == clientes.Telefone && c.Id != clientes.Id);
+
+            if (telefoneDuplicado)
+                ModelState.AddModelError("Telefone", "Este número de telemóvel já está em uso.");
 
             if (ModelState.IsValid)
             {
@@ -124,7 +150,7 @@ namespace Reserva_Restaurantes.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = clientes.Id });
             }
             return View(clientes);
         }
@@ -143,6 +169,9 @@ namespace Reserva_Restaurantes.Controllers
             {
                 return NotFound();
             }
+            
+            if (!User.IsInRole("Administrador") && clientes.Email != User.Identity?.Name)
+                return Forbid();
 
             return View(clientes);
         }
@@ -155,11 +184,17 @@ namespace Reserva_Restaurantes.Controllers
             var clientes = await _context.Clientes.FindAsync(id);
             if (clientes != null)
             {
+                if (!User.IsInRole("Administrador") && clientes.Email != User.Identity?.Name)
+                    return Forbid();
                 _context.Clientes.Remove(clientes);
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if(User.IsInRole("Administrador")){
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction("Logout", "Account"); // logout após autodestruição
         }
 
         private bool ClientesExists(int id)

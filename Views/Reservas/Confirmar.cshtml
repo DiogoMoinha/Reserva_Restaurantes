@@ -1,0 +1,56 @@
+﻿@model Reserva_Restaurantes.Models.Reservas
+@{
+    ViewData["Title"] = "Confirmar Reserva";
+    var mesas = ViewBag.Mesas as List<Reserva_Restaurantes.Models.Mesas> ?? new List<Reserva_Restaurantes.Models.Mesas>();
+}
+
+<h2>Confirmar Reserva</h2>
+
+<div>
+    <p><strong>Data:</strong> @Model.Data.ToShortDateString()</p>
+    <p><strong>Hora:</strong> @Model.Hora.ToString("HH:mm")</p>
+    <p><strong>Número de Pessoas:</strong> @Model.PessoasQtd</p>
+    <p><strong>Cliente:</strong> @(Model.Cliente?.Nome ?? "Cliente não definido")</p>
+
+</div>
+
+<form asp-action="Confirmar" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+
+    <div class="form-group">
+        <label><strong>Selecione as mesas disponíveis:</strong></label>
+        @if (mesas != null && mesas.Any())
+        {
+            foreach (var mesa in mesas)
+            {
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="mesasSelecionadas" value="@mesa.Id" id="mesa_@mesa.Id" />
+                    <label class="form-check-label" for="mesa_@mesa.Id">
+                        Mesa @mesa.NumMesa (Capacidade: @mesa.Capacidade)
+                    </label>
+                </div>
+            }
+        }
+        else
+        {
+            <p><em>Não há mesas disponíveis.</em></p>
+        }
+    </div>
+
+    <div class="mt-3">
+        <button type="submit" class="btn btn-success">Confirmar Reserva</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger mt-3">
+        <ul>
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}

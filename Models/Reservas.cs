@@ -33,6 +33,11 @@ public class Reservas
     [Range(1, 20, ErrorMessage = "A reserva deve ser para entre 1 e 20 pessoas.")]
     public int PessoasQtd { get; set; }
     
+    /// <summary>
+    /// Confirmação da reserva
+    /// </summary>
+    public bool Confirmada { get; set; } = false;
+    
     /* *****************************
      * Definição de Relacionamentos
      * *****************************
@@ -48,4 +53,7 @@ public class Reservas
     [ForeignKey(nameof(Restaurante))]
     public int RestauranteFK { get; set; }
     public Restaurantes Restaurante { get; set; }
+    
+    // Muitas reservas podem ocupar muitas mesas
+    public List<Reserva_Mesa> ReservasMesas { get; set; } = new();
 }

@@ -54,6 +54,12 @@ namespace Reserva_Restaurantes.Migrations
                             Id = "a",
                             Name = "Administrador",
                             NormalizedName = "ADMINISTRADOR"
+                        },
+                        new
+                        {
+                            Id = "f",
+                            Name = "Funcionario",
+                            NormalizedName = "FUNCIONARIO"
                         });
                 });
 
@@ -151,15 +157,15 @@ namespace Reserva_Restaurantes.Migrations
                         {
                             Id = "admin",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "963995ff-213d-444f-a87d-a06a61a21307",
+                            ConcurrencyStamp = "a330e4ce-7b25-49ef-9f5c-be2bda58acc8",
                             Email = "admin@mail.pt",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAIL.PT",
                             NormalizedUserName = "ADMIN@MAIL.PT",
-                            PasswordHash = "AQAAAAIAAYagAAAAEF3/TyAzfpWk2ZZuhLlSonIOn5iVf76/j25BIDBCpNDzW8omY6p1FdjqKyJNdoUlHw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENqvM45GLDdaQeyTATtlGtHekFPPojNB4F4yvErhviPqE5vaY5J2TY0g/ZkDTAG4dw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2f5761f0-a9d9-4b7a-8107-5a61aecfffa4",
+                            SecurityStamp = "7f4f68ec-368c-448a-a813-9ee6519458ba",
                             TwoFactorEnabled = false,
                             UserName = "admin@mail.pt"
                         });
@@ -336,6 +342,24 @@ namespace Reserva_Restaurantes.Migrations
                     b.ToTable("Pagamento");
                 });
 
+            modelBuilder.Entity("Reserva_Restaurantes.Models.Reserva_Mesa", b =>
+                {
+                    b.Property<int>("ReservasFK")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MesasFK")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReservasFK", "MesasFK");
+
+                    b.HasIndex("MesasFK");
+
+                    b.ToTable("Reserva_Mesa");
+                });
+
             modelBuilder.Entity("Reserva_Restaurantes.Models.Reservas", b =>
                 {
                     b.Property<int>("Id")
@@ -346,6 +370,9 @@ namespace Reserva_Restaurantes.Migrations
 
                     b.Property<int>("ClienteFK")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Confirmada")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("Data")
                         .HasColumnType("datetime2");
@@ -485,6 +512,25 @@ namespace Reserva_Restaurantes.Migrations
                     b.Navigation("Reserva");
                 });
 
+            modelBuilder.Entity("Reserva_Restaurantes.Models.Reserva_Mesa", b =>
+                {
+                    b.HasOne("Reserva_Restaurantes.Models.Mesas", "Mesas")
+                        .WithMany("ReservasMesas")
+                        .HasForeignKey("MesasFK")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Reserva_Restaurantes.Models.Reservas", "Reservas")
+                        .WithMany("ReservasMesas")
+                        .HasForeignKey("ReservasFK")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Mesas");
+
+                    b.Navigation("Reservas");
+                });
+
             modelBuilder.Entity("Reserva_Restaurantes.Models.Reservas", b =>
                 {
                     b.HasOne("Reserva_Restaurantes.Models.Clientes", "Cliente")
@@ -507,6 +553,16 @@ namespace Reserva_Restaurantes.Migrations
             modelBuilder.Entity("Reserva_Restaurantes.Models.Clientes", b =>
                 {
                     b.Navigation("ListaReservas");
+                });
+
+            modelBuilder.Entity("Reserva_Restaurantes.Models.Mesas", b =>
+                {
+                    b.Navigation("ReservasMesas");
+                });
+
+            modelBuilder.Entity("Reserva_Restaurantes.Models.Reservas", b =>
+                {
+                    b.Navigation("ReservasMesas");
                 });
 
             modelBuilder.Entity("Reserva_Restaurantes.Models.Restaurantes", b =>

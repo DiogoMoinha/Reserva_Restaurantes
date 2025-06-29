@@ -72,6 +72,7 @@
             @if (User.IsInRole("Administrador") || User.IsInRole("Funcionario"))
             {
                 <span> | </span><a asp-action="Delete" asp-route-id="@item.Id">Apagar</a>
+                <span> | </span><a asp-action="Confirmar" asp-route-id="@item.Id">Confirmar</a>
             }
         </td>
     </tr>

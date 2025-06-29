@@ -34,4 +34,6 @@ public class Mesas
     [Required(ErrorMessage = "É necessário indicar o restaurante.")]
     public int RestauranteFK { get; set; }
     public Restaurantes Restaurante { get; set; }
+    
+    public ICollection<Reserva_Mesa> ReservasMesas { get; set; }
 }

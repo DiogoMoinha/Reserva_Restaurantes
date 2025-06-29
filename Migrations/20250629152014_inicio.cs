@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Reserva_Restaurantes.Migrations
 {
     /// <inheritdoc />
-    public partial class initialize : Migration
+    public partial class inicio : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -225,6 +227,7 @@ namespace Reserva_Restaurantes.Migrations
                     Data = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Hora = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PessoasQtd = table.Column<int>(type: "int", nullable: false),
+                    Confirmada = table.Column<bool>(type: "bit", nullable: false),
                     ClienteFK = table.Column<int>(type: "int", nullable: false),
                     RestauranteFK = table.Column<int>(type: "int", nullable: false)
                 },
@@ -266,15 +269,44 @@ namespace Reserva_Restaurantes.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Reserva_Mesa",
+                columns: table => new
+                {
+                    ReservasFK = table.Column<int>(type: "int", nullable: false),
+                    MesasFK = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reserva_Mesa", x => new { x.ReservasFK, x.MesasFK });
+                    table.ForeignKey(
+                        name: "FK_Reserva_Mesa_Mesas_MesasFK",
+                        column: x => x.MesasFK,
+                        principalTable: "Mesas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Reserva_Mesa_Reservas_ReservasFK",
+                        column: x => x.ReservasFK,
+                        principalTable: "Reservas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "a", null, "Administrador", "ADMINISTRADOR" });
+                values: new object[,]
+                {
+                    { "a", null, "Administrador", "ADMINISTRADOR" },
+                    { "f", null, "Funcionario", "FUNCIONARIO" }
+                });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "admin", 0, "963995ff-213d-444f-a87d-a06a61a21307", "admin@mail.pt", true, false, null, "ADMIN@MAIL.PT", "ADMIN@MAIL.PT", "AQAAAAIAAYagAAAAEF3/TyAzfpWk2ZZuhLlSonIOn5iVf76/j25BIDBCpNDzW8omY6p1FdjqKyJNdoUlHw==", null, false, "2f5761f0-a9d9-4b7a-8107-5a61aecfffa4", false, "admin@mail.pt" });
+                values: new object[] { "admin", 0, "a330e4ce-7b25-49ef-9f5c-be2bda58acc8", "admin@mail.pt", true, false, null, "ADMIN@MAIL.PT", "ADMIN@MAIL.PT", "AQAAAAIAAYagAAAAENqvM45GLDdaQeyTATtlGtHekFPPojNB4F4yvErhviPqE5vaY5J2TY0g/ZkDTAG4dw==", null, false, "7f4f68ec-368c-448a-a813-9ee6519458ba", false, "admin@mail.pt" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -336,6 +368,11 @@ namespace Reserva_Restaurantes.Migrations
                 column: "ReservasFK");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reserva_Mesa_MesasFK",
+                table: "Reserva_Mesa",
+                column: "MesasFK");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reservas_ClienteFK",
                 table: "Reservas",
                 column: "ClienteFK");
@@ -365,16 +402,19 @@ namespace Reserva_Restaurantes.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Mesas");
+                name: "Pagamento");
 
             migrationBuilder.DropTable(
-                name: "Pagamento");
+                name: "Reserva_Mesa");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Mesas");
 
             migrationBuilder.DropTable(
                 name: "Reservas");
